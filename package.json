@@ -1,0 +1,29 @@
+{
+  "name": "wikiracer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "client-install": "npm install --prefix wikiracer-client",
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "wikiracer-client": "npm start --prefix wikiracer-client",
+    "dev": "concurrently \"npm run server\" \"npm run wikiracer-client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix wikiracer-client && npm run build --prefix wikiracer-client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kev-kev/wikiracer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kev-kev/wikiracer/issues"
+  },
+  "homepage": "https://github.com/kev-kev/wikiracer#readme",
+  "dependencies": {
+    "concurrently": "^7.3.0",
+    "create-react-app": "^5.0.1",
+    "nodemon": "^2.0.19"
+  }
+}
