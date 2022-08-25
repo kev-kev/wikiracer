@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "client-install": "npm install --prefix wikiracer-client",
-    "start": "node index.js",
-    "server": "nodemon index.js",
+    "start": "node server.js",
+    "server": "nodemon server.js",
     "wikiracer-client": "npm start --prefix wikiracer-client",
     "dev": "concurrently \"npm run server\" \"npm run wikiracer-client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix wikiracer-client && npm run build --prefix wikiracer-client"
