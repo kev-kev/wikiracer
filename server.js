@@ -1,10 +1,20 @@
 const express = require('express');
 const app = express();
 const server = require("http").createServer(app);
-const port = process.env.PORT || 5000;
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000", // client server url; TODO: set up for production
+    methods: ["GET", "POST"],
+  },
+});
+
+const PORT = 4001;
+server.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+
 const path = require('path');
 const rooms = {};
 
+// Set up proxy to the frontend React app
 //production mode
 if(process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'wikiracer-client/build'))); 
@@ -18,22 +28,6 @@ if(process.env.NODE_ENV === 'production') {
   });
 }
 
-//Start server
-// app.listen(port, (req, res) => {
-//   console.log(`server listening on port: ${port}`);
-// });
-
-const webSocketServer = require('websocket').server;
-const webSocketsServerPort = process.env.PORT || 8000;
-
-app.listen(webSocketsServerPort, (req, res) => {
-  console.log(`listening to WS server, port: ${webSocketsServerPort}`);
-});
-
-const wsServer = new webSocketServer({
-  httpServer: server
-});
-
 const getUniqueID = () => {
   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 };
@@ -42,6 +36,7 @@ const createNewRoom = (connection) => {
   const roomID = getUniqueID();
   rooms[roomID] = {"host": connection};
   console.log('hosting room: ' + roomID + ' in ' + Object.getOwnPropertyNames(rooms));
+  return roomID;
 }
 
 const joinRoom = (connection, roomID) => {
@@ -49,11 +44,18 @@ const joinRoom = (connection, roomID) => {
   console.log("joined room: " + roomID);
 }
 
-wsServer.on('request', (request) => {
-  // You can rewrite this part of the code to accept only the requests from allowed origin
-  console.log((new Date()) + ' Recieved a new connection from origin ' + request.origin + '.');
-  const connection = request.accept(null, request.origin);
 
+io.on("connection", (socket) => {
+  console.log("Client connected");
+
+  // Events that come from the frontend -> backend
+  // That may either send back info to the same frontend
+  // Or cause an emit of an event to the other connected frontends
+  socket.on("NEW_ROOM", (cb) => {
+    const newRoomCode = createNewRoom();
+    cb({
+      roomCode: newRoomCode,
+    });
+  });
 });
-
 

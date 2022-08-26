@@ -1,21 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './Components/Home';
 import Room from "./Components/Room";
+import SocketManager from "./Components/SocketManager";
+import { GlobalProvider } from "./context/GlobalContext";
+import socketIOClient from "socket.io-client";
+const SERVER_URL = "http://localhost:4001/";
+const socket = socketIOClient(SERVER_URL);
 
 const App = () => {
   useEffect(() => {
-    // connect to server
+    // connect to backend server
     fetch('/');
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/room/:id" element={<Room />} />
-      </Routes>
-    </BrowserRouter>
+    <GlobalProvider>
+      <SocketManager socket={socket} />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home socket={socket} />} />
+          <Route path="/room/:id" element={<Room socket={socket} />} />
+        </Routes>
+      </BrowserRouter>
+    </GlobalProvider>
   );
 }
 

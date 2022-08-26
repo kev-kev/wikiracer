@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { w3cwebsocket as W3CWebSocket } from "websocket";
+import { useContext } from "react";
+import { GlobalContext } from "../context/GlobalContext";
 
-
-const Home = () => {
-  const [client, setClient] = useState("");
+const Home = (props) => {
   const navigate = useNavigate();
-  useEffect(() => {
-    if(client){
-      client.onopen = () => {
-        console.log('WebSocket Client Connected');
-      };
-      client.onmessage = (message) => {
-        console.log(message);
-      };
-    }
-  }, [client])
+  const {
+    setRoomCode,
+  } = useContext(GlobalContext);
 
   const handleJoinClick = () => {
      console.log("Joined");
@@ -24,7 +16,13 @@ const Home = () => {
 
   const handleHostClick = () => {
      console.log("Hosted");
-     setClient(new W3CWebSocket('ws://127.0.0.1:8000'));
+      props.socket.emit(
+        "NEW_ROOM", (response) => {
+          const roomCode = response.roomCode; // const {roomCode} = response;
+          setRoomCode(roomCode);
+          navigate(`/room/${roomCode}`);
+        }
+      );
   }
 
   return (
