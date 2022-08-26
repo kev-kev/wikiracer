@@ -57,5 +57,9 @@ io.on("connection", (socket) => {
       roomCode: newRoomCode,
     });
   });
+
+  // FORFEIT_GAME event
+
+  // WIN_GAME event
 });
 
