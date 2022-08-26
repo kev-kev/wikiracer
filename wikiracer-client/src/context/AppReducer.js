@@ -5,6 +5,17 @@ export default (state, action) => {
         ...state,
         roomCode: action.payload,
       }
+    case "SET_HOST":
+      return {
+        ...state,
+        host: action.payload
+      }
+    case "SET_GUEST":
+      return {
+        ...state,
+        guest: action.payload
+      }
+
     default:
       return state;
   }

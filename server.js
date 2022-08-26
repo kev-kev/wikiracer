@@ -32,18 +32,19 @@ const getUniqueID = () => {
   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 };
 
-const createNewRoom = (connection) => {
+const createNewRoom = (username, socket) => {
   const roomID = getUniqueID();
-  rooms[roomID] = {"host": connection};
+  rooms[roomID] = {"host": username};
   console.log('hosting room: ' + roomID + ' in ' + Object.getOwnPropertyNames(rooms));
+  socket.join(roomID);
   return roomID;
 }
 
-const joinRoom = (connection, roomID) => {
-  rooms[roomID]["guest"] = connection;
+const joinRoom = (username, roomID, socket) => {
+  rooms[roomID]["guest"] = username;
+  socket.join(roomID);
   console.log("joined room: " + roomID);
 }
-
 
 io.on("connection", (socket) => {
   console.log("Client connected");
@@ -51,11 +52,28 @@ io.on("connection", (socket) => {
   // Events that come from the frontend -> backend
   // That may either send back info to the same frontend
   // Or cause an emit of an event to the other connected frontends
-  socket.on("NEW_ROOM", (cb) => {
-    const newRoomCode = createNewRoom();
+  socket.on("NEW_ROOM", (username, cb) => {
+    const newRoomCode = createNewRoom(username, socket);
     cb({
       roomCode: newRoomCode,
     });
   });
+  // join room
+  socket.on("JOIN_ROOM", (roomID, username, cb) => {
+    joinRoom(username, roomID, socket);
+    cb({
+      room: rooms[roomID],
+      roomCode: roomID
+    });
+    socket.to(roomID).emit("USER_JOINED_ROOM", username);
+  });
+  // game start
+
+  // game win
+
+  // forfeit
+
+  // leave room
 });
 
+// TODO: room cleanup

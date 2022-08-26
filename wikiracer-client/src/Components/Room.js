@@ -1,6 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { useContext } from 'react';
+import { GlobalContext } from "../context/GlobalContext";
 
 const Room = () => {
+  const {
+    host,
+    guest
+  } = useContext(GlobalContext);
   const navigate = useNavigate();
   const urlParams = useParams();
 
@@ -21,11 +27,8 @@ const Room = () => {
     <>
       <div>Room Code: {urlParams.id} </div>
       <br />
-      <div>Players: 
-        <ul>
-          <li>You</li>
-        </ul>
-      </div>
+      <div>Host: {host}</div>
+      <div>Guest: {guest}</div>
       <button onClick={() => handleStartGame()}>Start Game</button><br/>
       <button onClick={() => handleExitRoom()}>Exit Room</button>
     </>
