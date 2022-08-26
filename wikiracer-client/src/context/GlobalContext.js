@@ -1,10 +1,12 @@
 import React, { createContext, useReducer } from "react";
 import AppReducer from "./AppReducer";
 
-const initialState = {
+export const initialState = {
   roomCode: "",
   host: "",
   guest: "",
+  gameInProgress: false,
+  isHost: false,
 };
 
 export const GlobalContext = createContext(initialState);
@@ -22,14 +24,41 @@ export const GlobalProvider = ({ children }) => {
     dispatch({
       type: "SET_HOST",
       payload: username
-    })
+    });
   }
 
   const setGuest = (username) => {
     dispatch({
       type: "SET_GUEST",
       payload: username
-    })
+    });
+  }
+
+  const startGame = () => {
+    dispatch({
+      type: "SET_GAME_IN_PROGRESS",
+      payload: true
+    });
+  }
+
+  const endGame = () => {
+    dispatch({
+      type: "SET_GAME_IN_PROGRESS",
+      payload: false
+    });
+  }
+
+  const setIsHost = (isHost) => {
+    dispatch({
+      type: "SET_IS_HOST",
+      payload: isHost
+    });
+  }
+
+  const clearContext = () => {
+    dispatch({
+      type: "CLEAR_CONTEXT"
+    });
   }
 
   return (
@@ -40,7 +69,13 @@ export const GlobalProvider = ({ children }) => {
         setHost,
         host: state.host,
         setGuest,
-        guest: state.guest
+        guest: state.guest,
+        startGame,
+        endGame,
+        gameInProgress: state.gameInProgress,
+        isHost: state.isHost,
+        setIsHost,
+        clearContext,
       }}
     >
       {children}

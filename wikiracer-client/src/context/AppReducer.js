@@ -1,3 +1,5 @@
+import {initialState} from "./GlobalContext";
+
 export default (state, action) => {
   switch (action.type) {
     case "SET_ROOM_CODE":
@@ -15,7 +17,18 @@ export default (state, action) => {
         ...state,
         guest: action.payload
       }
-
+    case "SET_IS_HOST":
+      return {
+        ...state,
+        isHost: action.payload
+      }
+    case "SET_GAME_IN_PROGRESS":
+      return {
+        ...state,
+        gameInProgress: action.payload
+      }
+    case "CLEAR_CONTEXT":
+      return initialState;
     default:
       return state;
   }

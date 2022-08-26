@@ -11,8 +11,15 @@ const Home = (props) => {
   const {
     setRoomCode,
     setHost,
-    setGuest
+    setIsHost,
+    setGuest,
+    clearContext
   } = useContext(GlobalContext);
+
+  // Clear Context values if you return Home
+  useEffect(() => {
+    clearContext();
+  }, []);
 
   const handleJoinClick = () => {
      console.log("Joined");
@@ -33,6 +40,7 @@ const Home = (props) => {
           const {roomCode} = response;
           setRoomCode(roomCode);
           setHost(usernameInput);
+          setIsHost(true);
           navigate(`/room/${roomCode}`);
         }
       );
@@ -41,20 +49,31 @@ const Home = (props) => {
   return (
     <div>
       <h1>Home</h1>
-      <label for="usernameInput">username</label><br/>
+      <label htmlFor="usernameInput">username</label><br/>
       <input 
         name="usernameInput" 
         onChange={(e) => setUsernameInput(e.target.value)}
         value={usernameInput}
       /><br/>
-      <label for="roomCodeInput">room code</label><br/>
+      <label htmlFor="roomCodeInput">room code</label><br/>
       <input 
         name="roomCodeInput" 
         onChange={(e) => setRoomCodeInput(e.target.value)}
         value={roomCodeInput}
       /><br/>
-      <button onClick={() => handleJoinClick()}>Join</button><br/><br/>
-      <button onClick={() => handleHostClick()}>Host</button><br/>
+      <button
+        disabled={roomCodeInput.length != 4 || usernameInput.length < 1}
+        onClick={() => handleJoinClick()}
+      >
+        Join
+      </button><br/><br/>
+      <button
+        disabled={usernameInput.length < 1}
+        onClick={() => handleHostClick()}
+      >
+        Host
+      </button>
+      <br/>
     </div>
 
    
