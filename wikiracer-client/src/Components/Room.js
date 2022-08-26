@@ -13,13 +13,10 @@ const Room = () => {
 
   // TODO: Set idle timeout and trigger exit room if nothing happens
   const handleExitRoom = () => {
-    // TODO: Send forfeit game socket event
-    // Because if we exit, we forfeit.
     navigate("/");
   };
 
   // TODO: Add wikipedia iframe here and listen for onLoad
-  // Check for winner every onLoad, if win, emit WIN_GAME event
   return (
     <>
       <div>Room Code: {urlParams.id} </div>
