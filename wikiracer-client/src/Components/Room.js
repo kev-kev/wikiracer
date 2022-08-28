@@ -21,8 +21,8 @@ const Room = (props) => {
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, exit room.
 
-  // TODO: Add timer to state
-  
+  // TODO: Add timer to state https://upmostly.com/tutorials/settimeout-in-react-components-using-hooks
+
   const handleStartGame = () => {
     console.log("Start game clicked");
     startGame();
