@@ -1,5 +1,5 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { useContext } from 'react';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 
 const Room = (props) => {
@@ -9,14 +9,20 @@ const Room = (props) => {
     startGame,
     roomCode,
     isHost,
-    gameInProgress
+    gameInProgress,
+    username,
+    winGame,
+    forfeitGame,
+    winner
   } = useContext(GlobalContext);
   const navigate = useNavigate();
   const urlParams = useParams();
-
+  
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, exit room.
 
+  // TODO: Add timer to state
+  
   const handleStartGame = () => {
     console.log("Start game clicked");
     startGame();
@@ -25,6 +31,7 @@ const Room = (props) => {
 
   // TODO: Set idle timeout and trigger exit room if nothing happens
   const handleExitRoom = () => {
+    props.socket.emit("USER_LEFT", isHost, roomCode);
     navigate("/");
   };
 
@@ -35,11 +42,22 @@ const Room = (props) => {
       return "Waiting for host to start game...";
     }
   }
+
+  const handleWinGame = () => {
+    props.socket.emit("GAME_WIN", username, roomCode);
+    winGame(username);
+  }
+  const handleForfeitGame = () => {
+    props.socket.emit("GAME_FORFEIT", username, roomCode);
+    forfeitGame(username);
+  }
   // TODO: Add wikipedia iframe here and listen for onLoad
   return (
     <>
+      {!roomCode && <Navigate to="/" />}
       <div>Room Code: {roomCode} </div>
       <br />
+      {winner && <h2>Winner: {winner}</h2>}
       <div>Host: {host} {isHost ? "(You)" : ""}</div>
       <div>Guest: {guest} {isHost ? "" : "(You)"}</div>
       <button
@@ -49,6 +67,9 @@ const Room = (props) => {
         Start Game
       </button><br />
       {renderGameArea()}
+      <button onClick={() => handleWinGame()}>Win Game</button>
+      <br/>
+      <button onClick={() => handleForfeitGame()}>Forfeit Game</button>
       <br/>
       <button onClick={() => handleExitRoom()}>Exit Room</button>
     </>

@@ -27,6 +27,16 @@ export default (state, action) => {
         ...state,
         gameInProgress: action.payload
       }
+    case "SET_WINNER": 
+      return {
+        ...state,
+        winner: action.payload
+      }
+    case "CLEAR_GUEST":
+      return {
+        ...state,
+        guest: initialState.guest 
+      }
     case "CLEAR_CONTEXT":
       return initialState;
     default:

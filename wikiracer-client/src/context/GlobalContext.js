@@ -7,7 +7,10 @@ export const initialState = {
   guest: "",
   gameInProgress: false,
   isHost: false,
+  winner: "",
 };
+
+
 
 export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
@@ -48,11 +51,36 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
+  const winGame = (username) => {
+    // TODO: score for winner
+    endGame();
+    dispatch({
+      type: "SET_WINNER",
+      payload: username
+    })
+  }
+
+  const forfeitGame = (username) => {
+    console.log(`game forfeited by ${username}`)
+    endGame();
+    dispatch({
+      type: "SET_WINNER",
+      payload: username === state.host ? 
+        state.guest : state.host 
+    })
+  }
+  
   const setIsHost = (isHost) => {
     dispatch({
       type: "SET_IS_HOST",
       payload: isHost
     });
+  }
+
+  const clearGuest = () => {
+    dispatch({
+      type: "CLEAR_GUEST"
+    })
   }
 
   const clearContext = () => {
@@ -71,11 +99,16 @@ export const GlobalProvider = ({ children }) => {
         setGuest,
         guest: state.guest,
         startGame,
+        winGame,
+        winner: state.winner,
         endGame,
         gameInProgress: state.gameInProgress,
         isHost: state.isHost,
         setIsHost,
         clearContext,
+        username: state.isHost ? state.host : state.guest,
+        forfeitGame,
+        clearGuest
       }}
     >
       {children}

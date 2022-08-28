@@ -68,23 +68,29 @@ io.on("connection", (socket) => {
     socket.to(roomID).emit("USER_JOINED_ROOM", username);
   });
   // game start
-  socket.on("GAME_START", (roomID, cb) => {
-    // What do we send to the room when game has started?
+  socket.on("GAME_START", (roomID) => {
     socket.to(roomID).emit("HOST_STARTED_GAME");
   });
   // game win
-  socket.on("GAME_WIN", () => {
+  socket.on("GAME_WIN", (username, roomID) => {
     // What do we send to the room when game is won by someone?
+    socket.to(roomID).emit("USER_WIN", username);
   });
   // forfeit
-  socket.on("GAME_FORFEIT", () => {
+  socket.on("GAME_FORFEIT", (username, roomID) => {
     // What do we send to the room when game is forfeited by someone?
+    socket.to(roomID).emit("USER_FORFEIT", username);
   });
   // leave room
-  socket.on("USER_LEFT", () => {
-    // What do we send to the room when someone leaves the room?
-    // What else do we need to update in the server?
-    // Can we do clean up here?
+  socket.on("USER_LEFT", (isHost, roomID) => {
+    if(isHost){
+      delete rooms[roomID];
+      socket.to(roomID).emit("HOST_LEFT");
+    }
+    else {
+      rooms[roomID]["guest"] = "";
+      socket.to(roomID).emit("GUEST_LEFT");
+    }
   });
 });
 

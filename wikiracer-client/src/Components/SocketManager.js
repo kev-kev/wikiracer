@@ -5,7 +5,10 @@ const SocketManager = (props) => {
   const {
     setGuest,
     startGame,
-    endGame
+    winGame,
+    forfeitGame,
+    clearContext,
+    clearGuest
   } = useContext(GlobalContext);
 
   // Events from the backend -> frontend,
@@ -18,24 +21,29 @@ const SocketManager = (props) => {
     // game start
     props.socket.on("HOST_STARTED_GAME", () => {
       startGame();
-
+      console.log('Host started game')
     });
-    // other user win
-    props.socket.on("USER_WON", (username) => {
-      // ...
-
+    
+    props.socket.on("USER_WIN", (username) => {
+      // TODO: (stretch) score for the user who won
+      winGame(username);
+      console.log(`game won by ${username}`)
     });
     // other user forfeit
     props.socket.on("USER_FORFEIT", (username) => {
-      // ...
-
+      forfeitGame(username);
+      console.log(`game forfeited by ${username}`)
     });
     // other user left room
-    props.socket.on("USER_LEFT", (username) => {
-      // Find username in GlobalContext (either host or guest)
-      // If it was guest, remove/clear the name.
-      // If it was host, change guest to host and remove/clear guest.
+    props.socket.on("GUEST_LEFT", () => {
+      clearGuest();
     });
+
+    props.socket.on("HOST_LEFT", () => {
+      console.log('firing alert')
+      alert("the host left the game :<");
+      clearContext();
+    })
   }, []);
 
   return null;
