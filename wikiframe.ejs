@@ -1,0 +1,18 @@
+<%- body %>
+<link rel="stylesheet" type="text/css" href="https://en.wikipedia.org/w/load.php?lang=en&modules=site.styles&only=styles&skin=vector" />
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const titleMainSpan = document.getElementsByClassName("mw-page-title-main");
+    let articleTitle = "";
+    if (titleMainSpan.length) {
+      articleTitle = titleMainSpan[0].innerHTML;
+      console.log("titleMainSpan found", articleTitle);
+    }  else {
+      const firstHeadingBlock = document.getElementsByClassName("mw-first-heading");
+      articleTitle = firstHeadingBlock[0].innerHTML;
+    }
+    console.log("Posting message: ", {articleTitle: articleTitle});
+    // window.postMessage("wikipediaPageLoaded", {articleTitle: articleTitle});
+    window.parent.postMessage(articleTitle, '*');
+  });
+</script>
