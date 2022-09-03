@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const ejs = require('ejs');
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -7,7 +8,7 @@ const io = require("socket.io")(server, {
     methods: ["GET", "POST"],
   },
 });
-
+const fetch = require("node-fetch");
 const PORT = 4001;
 server.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
@@ -16,17 +17,34 @@ const rooms = {};
 
 // Set up proxy to the frontend React app
 //production mode
-if(process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'wikiracer-client/build'))); 
-  app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, 'client/build/index.html'));
+// if(process.env.NODE_ENV === 'production') {
+//   app.use(express.static(path.join(__dirname, 'wikiracer-client/build'))); 
+//   app.get('*', (req, res) => {
+//       res.sendFile(path.join(__dirname, 'wikiracer-client/build/index.html'));
+//   });
+// } else {
+//   //build mode
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'wikiracer-client/public/index.html'));
+//   });
+// }
+
+// app.get('/w/load.php', async (req, res) => {
+//   console.log(req.params);
+//   const response = await fetch('https://en.wikipedia.org/w/load.php?lang=en&modules=ext.cite.styles%7Cext.uls.interlanguage%7Cext.visualEditor.desktopArticleTarget.noscript%7Cext.wikimediaBadges%7Cjquery.makeCollapsible.styles%7Cskins.vector.styles.legacy%7Cwikibase.client.init&only=styles&skin=vector');
+//   const body = await response.text();
+//   res.send(body);
+// });
+
+app.get('/wiki/:articleTitle', async (req, res) => {
+  const response = await fetch(`https://en.wikipedia.org/wiki/${req.params.articleTitle}`);
+  const body = await response.text();
+  ejs.renderFile(__dirname + '/wikiframe.ejs', {body: body, articleTitle: req.params.articleTitle}, {}, function(err, str) {
+    // str => Rendered HTML string
+    res.send(str);
   });
-} else {
-  //build mode
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/public/index.html'));
-  });
-}
+//  res.send(body);
+});
 
 const getUniqueID = () => {
   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);

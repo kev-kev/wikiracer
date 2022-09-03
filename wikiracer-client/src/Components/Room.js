@@ -1,5 +1,5 @@
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 
 const Room = (props) => {
@@ -18,6 +18,47 @@ const Room = (props) => {
   const navigate = useNavigate();
   const urlParams = useParams();
   const iFrameRef = useRef(null);
+  const [currentWikiArticle, setCurrentWikiArticle] = useState("");
+  const [winArticle, setWinArticle] = useState("");
+  const [startArticle, setStartArticle] = useState("");
+  const [startArticleUrl, setStartArticleUrl] = useState("");
+
+  useEffect(() => {
+    window.addEventListener("message", (event) => {
+      if (event.origin === "http://localhost:4001") {
+        console.log("New Wikipedia Page Load: ", event.data);
+        setCurrentWikiArticle(event.data);
+      } else {
+          return;
+      }
+    }, false);
+    // Get a random article as the winning name
+    fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary").then(response => {
+      return response.json();
+    }).then(data => {
+      console.log(data);
+      setWinArticle(data.title);
+    });
+
+    fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary").then(response => {
+      return response.json();
+    }).then(data => {
+      console.log(data.content_urls.desktop.page);
+      const urlParts =  data.content_urls.desktop.page.split("/");
+      const randomArticleUrlSlug = urlParts[urlParts.length - 1];
+      setStartArticle(data.title);
+      setStartArticleUrl(randomArticleUrlSlug);
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("Current Article:", currentWikiArticle);
+    console.log("Win Article: ", winArticle);
+    if (currentWikiArticle !== "" && currentWikiArticle === winArticle) {
+      console.log("Winner winner!");
+      handleWinGame();
+    }
+  }, [currentWikiArticle]);
   
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, exit room.
@@ -46,6 +87,7 @@ const Room = (props) => {
 
   const handleWinGame = () => {
     props.socket.emit("GAME_WIN", username, roomCode);
+    console.log("HELLOOO");
     winGame(username);
   }
   
@@ -56,8 +98,7 @@ const Room = (props) => {
 
   const renderIframe = () => {
     return (
-      <iframe src="https://en.wikipedia.org/wiki/Special:Random" height="800" width="80%" 
-        onLoad={() => console.log(iFrameRef.current.contentWindow.location.href)}
+      <iframe src={`http://localhost:4001/wiki/${startArticleUrl}`} style={{width: "96%", height: "50vh"}}
         ref={iFrameRef}
       />
     )
@@ -86,6 +127,8 @@ const Room = (props) => {
         <button onClick={() => handleForfeitGame()}>Forfeit Game</button>
         <br/>
         <button onClick={() => handleExitRoom()}>Exit Room</button> <br/>
+        <h3>Start: {startArticle}</h3>
+        <h3>End: {winArticle}</h3>
         {renderIframe()}
       </div>
     </>
