@@ -11,7 +11,8 @@ export const initialState = {
   startArticle: "",
   endArticle: "",
   curArticle: "",
-  isFetching: false
+  isFetching: false,
+  articleText: "",
 };
 
 
@@ -115,6 +116,13 @@ export const GlobalProvider = ({ children }) => {
     })
   }
 
+  const setArticleText = (text) => {
+    dispatch({
+      type: "SET_ARTICLE_TEXT",
+      payload: text
+    })
+  }
+
   const clearContext = () => {
     dispatch({
       type: "CLEAR_CONTEXT"
@@ -148,7 +156,9 @@ export const GlobalProvider = ({ children }) => {
         curArticle: state.curArticle,
         setCurArticle,
         isFetching: state.isFetching,
-        setIsFetching
+        setIsFetching,
+        articleText: state.articleText,
+        setArticleText
       }}
     >
       {children}

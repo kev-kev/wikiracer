@@ -59,6 +59,11 @@ export default (state, action) => {
         ...state,
         isFetching: action.payload
       }
+    case "SET_ARTICLE_TEXT":
+      return {
+        ...state,
+        articleText: action.payload
+      }
     case "CLEAR_CONTEXT":
       return initialState;
     default:

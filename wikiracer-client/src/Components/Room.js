@@ -19,52 +19,9 @@ const Room = ({socket}) => {
     setStartArticle,
     endArticle,
     setEndArticle,
-    curArticle,
-    setCurArticle,
   } = useContext(GlobalContext);
   const navigate = useNavigate();
   const urlParams = useParams();
-  // const [currentWikiArticle, setCurrentWikiArticle] = useState("");
-  // const [winArticle, setWinArticle] = useState("");
-  // const [startArticle, setStartArticle] = useState("");
-  // const [startArticleUrl, setStartArticleUrl] = useState("");
-
-  // useEffect(() => {
-    // window.addEventListener("message", (event) => {
-    //   if (event.origin === "http://localhost:4001") {
-    //     console.log("New Wikipedia Page Load: ", event.data);
-    //     setCurrentWikiArticle(event.data);
-    //   } else {
-    //     return;
-    //   }
-    // }, false);
-
-    // Get a random article as the winning name - https://en.wikipedia.org/api/rest_v1/page/random/summary
-    // fetch("https://en.wikipedia.org/api/rest_v1/page/summary/Wario").then(response => {
-    //   return response.json();
-    // }).then(data => {
-    //   setWinArticle(data.title);
-    // });
-
-    // fetch("https://en.wikipedia.org/api/rest_v1/page/summary/Waluigi").then(response => {
-    //   return response.json();
-    // }).then(data => {
-    //   console.log(data.content_urls.desktop.page);
-    //   const urlParts =  data.content_urls.desktop.page.split("/");
-    //   const randomArticleUrlSlug = urlParts[urlParts.length - 1];
-    //   setStartArticle(data.title);
-    //   setStartArticleUrl(randomArticleUrlSlug);
-    // });
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log("Current Article:", currentWikiArticle);
-  //   console.log("Win Article: ", winArticle);
-  //   if (currentWikiArticle !== "" && currentWikiArticle === winArticle) {
-  //     console.log("Winner winner!");
-  //     handleWinGame();
-  //   }
-  // }, [currentWikiArticle]);
   
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, exit room.
@@ -107,18 +64,6 @@ const Room = ({socket}) => {
     forfeitGame(username);
   }
 
-  // const renderIframe = () => {
-  //   return (
-  //     <iframe 
-  //       src={`http://localhost:4001/wiki/${startArticleUrl}`} 
-  //       style={{width: "96%", height: "50vh"}}
-  //       ref={iFrameRef}
-  //       title="wiki content"
-  //       />
-  //   )
-  // }
-
-  // TODO: Add wikipedia iframe here and listen for onLoad
   return (
     <>
       {!roomCode && <Navigate to="/" />}
