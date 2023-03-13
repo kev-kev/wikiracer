@@ -32,15 +32,15 @@ const Room = (props) => {
           return;
       }
     }, false);
-    // Get a random article as the winning name
-    fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary").then(response => {
+    // Get a random article as the winning name - https://en.wikipedia.org/api/rest_v1/page/random/summary
+    fetch("https://en.wikipedia.org/api/rest_v1/page/summary/Wario").then(response => {
       return response.json();
     }).then(data => {
       console.log(data);
       setWinArticle(data.title);
     });
 
-    fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary").then(response => {
+    fetch("https://en.wikipedia.org/api/rest_v1/page/summary/Waluigi").then(response => {
       return response.json();
     }).then(data => {
       console.log(data.content_urls.desktop.page);
@@ -98,11 +98,13 @@ const Room = (props) => {
 
   const renderIframe = () => {
     return (
-      <iframe src={`http://localhost:4001/wiki/${startArticleUrl}`} style={{width: "96%", height: "50vh"}}
+      <iframe 
+        src={`http://localhost:4001/wiki/${startArticleUrl}`} 
+        style={{width: "96%", height: "50vh"}}
         ref={iFrameRef}
-      />
+        title="wiki content"
+        />
     )
-
   }
 
   // TODO: Add wikipedia iframe here and listen for onLoad

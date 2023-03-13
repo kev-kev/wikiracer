@@ -15,26 +15,6 @@ server.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 const path = require('path');
 const rooms = {};
 
-// Set up proxy to the frontend React app
-//production mode
-// if(process.env.NODE_ENV === 'production') {
-//   app.use(express.static(path.join(__dirname, 'wikiracer-client/build'))); 
-//   app.get('*', (req, res) => {
-//       res.sendFile(path.join(__dirname, 'wikiracer-client/build/index.html'));
-//   });
-// } else {
-//   //build mode
-//   app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'wikiracer-client/public/index.html'));
-//   });
-// }
-
-// app.get('/w/load.php', async (req, res) => {
-//   console.log(req.params);
-//   const response = await fetch('https://en.wikipedia.org/w/load.php?lang=en&modules=ext.cite.styles%7Cext.uls.interlanguage%7Cext.visualEditor.desktopArticleTarget.noscript%7Cext.wikimediaBadges%7Cjquery.makeCollapsible.styles%7Cskins.vector.styles.legacy%7Cwikibase.client.init&only=styles&skin=vector');
-//   const body = await response.text();
-//   res.send(body);
-// });
 
 app.get('/wiki/:articleTitle', async (req, res) => {
   const response = await fetch(`https://en.wikipedia.org/wiki/${req.params.articleTitle}`);
@@ -43,7 +23,6 @@ app.get('/wiki/:articleTitle', async (req, res) => {
     // str => Rendered HTML string
     res.send(str);
   });
-//  res.send(body);
 });
 
 const getUniqueID = () => {
