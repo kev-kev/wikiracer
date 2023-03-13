@@ -11,6 +11,7 @@ export const initialState = {
   startArticle: "",
   endArticle: "",
   curArticle: "",
+  isFetching: false
 };
 
 
@@ -107,6 +108,13 @@ export const GlobalProvider = ({ children }) => {
     })
   }
 
+  const setIsFetching = (bool=true) => {
+    dispatch({
+      type: "SET_IS_FETCHING",
+      payload: bool
+    })
+  }
+
   const clearContext = () => {
     dispatch({
       type: "CLEAR_CONTEXT"
@@ -138,7 +146,9 @@ export const GlobalProvider = ({ children }) => {
         endArticle: state.endArticle,
         setEndArticle,
         curArticle: state.curArticle,
-        setCurArticle
+        setCurArticle,
+        isFetching: state.isFetching,
+        setIsFetching
       }}
     >
       {children}
