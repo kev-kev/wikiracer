@@ -1,6 +1,7 @@
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
+import WikipediaContent from './WikipediaContent';
 
 const Room = (props) => {
   const {
@@ -29,14 +30,13 @@ const Room = (props) => {
         console.log("New Wikipedia Page Load: ", event.data);
         setCurrentWikiArticle(event.data);
       } else {
-          return;
+        return;
       }
     }, false);
     // Get a random article as the winning name - https://en.wikipedia.org/api/rest_v1/page/random/summary
     fetch("https://en.wikipedia.org/api/rest_v1/page/summary/Wario").then(response => {
       return response.json();
     }).then(data => {
-      console.log(data);
       setWinArticle(data.title);
     });
 
@@ -96,16 +96,16 @@ const Room = (props) => {
     forfeitGame(username);
   }
 
-  const renderIframe = () => {
-    return (
-      <iframe 
-        src={`http://localhost:4001/wiki/${startArticleUrl}`} 
-        style={{width: "96%", height: "50vh"}}
-        ref={iFrameRef}
-        title="wiki content"
-        />
-    )
-  }
+  // const renderIframe = () => {
+  //   return (
+  //     <iframe 
+  //       src={`http://localhost:4001/wiki/${startArticleUrl}`} 
+  //       style={{width: "96%", height: "50vh"}}
+  //       ref={iFrameRef}
+  //       title="wiki content"
+  //       />
+  //   )
+  // }
 
   // TODO: Add wikipedia iframe here and listen for onLoad
   return (
@@ -131,7 +131,7 @@ const Room = (props) => {
         <button onClick={() => handleExitRoom()}>Exit Room</button> <br/>
         <h3>Start: {startArticle}</h3>
         <h3>End: {winArticle}</h3>
-        {renderIframe()}
+        <WikipediaContent />
       </div>
     </>
   );
