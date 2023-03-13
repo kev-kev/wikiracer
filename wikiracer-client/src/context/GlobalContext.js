@@ -8,6 +8,9 @@ export const initialState = {
   gameInProgress: false,
   isHost: false,
   winner: "",
+  startArticle: "",
+  endArticle: "",
+  curArticle: "",
 };
 
 
@@ -82,6 +85,27 @@ export const GlobalProvider = ({ children }) => {
       type: "CLEAR_GUEST"
     })
   }
+  
+    const setStartArticle = (article) => {
+      dispatch({
+        type: "SET_START_ARTICLE",
+        payload: article
+      })
+    }
+
+  const setEndArticle = (article) => {
+    dispatch({
+      type: "SET_END_ARTICLE",
+      payload: article
+    })
+  }
+
+  const setCurArticle = (article) => {
+    dispatch({
+      type: "SET_CUR_ARTICLE",
+      payload: article
+    })
+  }
 
   const clearContext = () => {
     dispatch({
@@ -108,7 +132,13 @@ export const GlobalProvider = ({ children }) => {
         clearContext,
         username: state.isHost ? state.host : state.guest,
         forfeitGame,
-        clearGuest
+        clearGuest,
+        startArticle: state.startArticle,
+        setStartArticle,
+        endArticle: state.endArticle,
+        setEndArticle,
+        curArticle: state.curArticle,
+        setCurArticle
       }}
     >
       {children}

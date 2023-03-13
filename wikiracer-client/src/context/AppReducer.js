@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import {initialState} from "./GlobalContext";
 
 export default (state, action) => {
@@ -36,6 +37,22 @@ export default (state, action) => {
       return {
         ...state,
         guest: initialState.guest 
+      }
+    case "SET_START_ARTICLE":
+      return {
+        ...state,
+        startArticle: action.payload,
+        curArticle: action.payload
+      }
+    case "SET_END_ARTICLE":
+      return {
+        ...state,
+        endArticle: action.payload,
+      }
+    case "SET_CUR_ARTICLE":
+      return {
+        ...state,
+        curArticle: action.payload
       }
     case "CLEAR_CONTEXT":
       return initialState;

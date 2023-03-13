@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 import WikipediaContent from './WikipediaContent';
 
-const Room = (props) => {
+const Room = ({socket}) => {
   const {
     host,
     guest,
@@ -14,51 +14,54 @@ const Room = (props) => {
     username,
     winGame,
     forfeitGame,
-    winner
+    winner,
+    startArticle,
+    endArticle,
+    curArticle
   } = useContext(GlobalContext);
   const navigate = useNavigate();
   const urlParams = useParams();
-  const iFrameRef = useRef(null);
-  const [currentWikiArticle, setCurrentWikiArticle] = useState("");
-  const [winArticle, setWinArticle] = useState("");
-  const [startArticle, setStartArticle] = useState("");
-  const [startArticleUrl, setStartArticleUrl] = useState("");
+  // const [currentWikiArticle, setCurrentWikiArticle] = useState("");
+  // const [winArticle, setWinArticle] = useState("");
+  // const [startArticle, setStartArticle] = useState("");
+  // const [startArticleUrl, setStartArticleUrl] = useState("");
 
-  useEffect(() => {
-    window.addEventListener("message", (event) => {
-      if (event.origin === "http://localhost:4001") {
-        console.log("New Wikipedia Page Load: ", event.data);
-        setCurrentWikiArticle(event.data);
-      } else {
-        return;
-      }
-    }, false);
+  // useEffect(() => {
+    // window.addEventListener("message", (event) => {
+    //   if (event.origin === "http://localhost:4001") {
+    //     console.log("New Wikipedia Page Load: ", event.data);
+    //     setCurrentWikiArticle(event.data);
+    //   } else {
+    //     return;
+    //   }
+    // }, false);
+
     // Get a random article as the winning name - https://en.wikipedia.org/api/rest_v1/page/random/summary
-    fetch("https://en.wikipedia.org/api/rest_v1/page/summary/Wario").then(response => {
-      return response.json();
-    }).then(data => {
-      setWinArticle(data.title);
-    });
+    // fetch("https://en.wikipedia.org/api/rest_v1/page/summary/Wario").then(response => {
+    //   return response.json();
+    // }).then(data => {
+    //   setWinArticle(data.title);
+    // });
 
-    fetch("https://en.wikipedia.org/api/rest_v1/page/summary/Waluigi").then(response => {
-      return response.json();
-    }).then(data => {
-      console.log(data.content_urls.desktop.page);
-      const urlParts =  data.content_urls.desktop.page.split("/");
-      const randomArticleUrlSlug = urlParts[urlParts.length - 1];
-      setStartArticle(data.title);
-      setStartArticleUrl(randomArticleUrlSlug);
-    });
-  }, []);
+    // fetch("https://en.wikipedia.org/api/rest_v1/page/summary/Waluigi").then(response => {
+    //   return response.json();
+    // }).then(data => {
+    //   console.log(data.content_urls.desktop.page);
+    //   const urlParts =  data.content_urls.desktop.page.split("/");
+    //   const randomArticleUrlSlug = urlParts[urlParts.length - 1];
+    //   setStartArticle(data.title);
+    //   setStartArticleUrl(randomArticleUrlSlug);
+    // });
+  // }, []);
 
-  useEffect(() => {
-    console.log("Current Article:", currentWikiArticle);
-    console.log("Win Article: ", winArticle);
-    if (currentWikiArticle !== "" && currentWikiArticle === winArticle) {
-      console.log("Winner winner!");
-      handleWinGame();
-    }
-  }, [currentWikiArticle]);
+  // useEffect(() => {
+  //   console.log("Current Article:", currentWikiArticle);
+  //   console.log("Win Article: ", winArticle);
+  //   if (currentWikiArticle !== "" && currentWikiArticle === winArticle) {
+  //     console.log("Winner winner!");
+  //     handleWinGame();
+  //   }
+  // }, [currentWikiArticle]);
   
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, exit room.
@@ -68,12 +71,12 @@ const Room = (props) => {
   const handleStartGame = () => {
     console.log("Start game clicked");
     startGame();
-    props.socket.emit("GAME_START", roomCode);
+    socket.emit("GAME_START", roomCode);
   };
 
   // TODO: Set idle timeout and trigger exit room if nothing happens (stretch)
   const handleExitRoom = () => {
-    props.socket.emit("USER_LEFT", isHost, roomCode);
+    socket.emit("USER_LEFT", isHost, roomCode);
     navigate("/");
   };
 
@@ -83,16 +86,16 @@ const Room = (props) => {
     } else if (!isHost) {
       return "Waiting for host to start game...";
     }
-  }
+  } 
 
   const handleWinGame = () => {
-    props.socket.emit("GAME_WIN", username, roomCode);
+    socket.emit("GAME_WIN", username, roomCode);
     console.log("HELLOOO");
     winGame(username);
   }
   
   const handleForfeitGame = () => {
-    props.socket.emit("GAME_FORFEIT", username, roomCode);
+    socket.emit("GAME_FORFEIT", username, roomCode);
     forfeitGame(username);
   }
 
@@ -130,7 +133,7 @@ const Room = (props) => {
         <br/>
         <button onClick={() => handleExitRoom()}>Exit Room</button> <br/>
         <h3>Start: {startArticle}</h3>
-        <h3>End: {winArticle}</h3>
+        <h3>End: {endArticle}</h3>
         <WikipediaContent />
       </div>
     </>
