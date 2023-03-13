@@ -16,8 +16,11 @@ const Room = ({socket}) => {
     forfeitGame,
     winner,
     startArticle,
+    setStartArticle,
     endArticle,
-    curArticle
+    setEndArticle,
+    curArticle,
+    setCurArticle,
   } = useContext(GlobalContext);
   const navigate = useNavigate();
   const urlParams = useParams();
@@ -67,6 +70,11 @@ const Room = ({socket}) => {
   // in the server via socket event -- if it does not, exit room.
 
   // TODO: Add timer to state https://upmostly.com/tutorials/settimeout-in-react-components-using-hooks
+
+  useEffect(() => {
+    setStartArticle("waluigi");
+    setEndArticle("wario");
+  }, []);
 
   const handleStartGame = () => {
     console.log("Start game clicked");
