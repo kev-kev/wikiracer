@@ -42,6 +42,7 @@ const Room = ({socket}) => {
   // TODO: Set idle timeout and trigger exit room if nothing happens (stretch)
   const handleExitRoom = () => {
     socket.emit("USER_LEFT", isHost, roomCode);
+    debugger
     navigate("/");
   };
 
