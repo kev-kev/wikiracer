@@ -6,12 +6,14 @@ import parse, { domToReact }  from 'html-react-parser';
 const classesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar'];
 const idsToHide = ['References', 'Notes'];
 
-const handleLinkClick = () => {
-  console.log('hihihihihi clickyclick')
-}
 
 const WikipediaContent = () => {
-  const { curArticle, isFetching, setIsFetching, articleText, setArticleText } = useContext(GlobalContext);
+  const { curArticle, isFetching, setIsFetching, articleText, setArticleText, setCurArticle } = useContext(GlobalContext);
+  
+  const handleLinkClick = (link) => {
+    link = link.split('/').at(-1);
+    setCurArticle(link)
+  }
 
   const getArticle = async () => {
     if(!curArticle)return;
@@ -22,17 +24,14 @@ const WikipediaContent = () => {
     const parsedData = parse(rawHTML?.toString(), {
       replace: domNode => {
         if(!domNode.attribs) return;
-        if(idsToHide.includes(domNode.attribs.id)) return <></>
+        if(idsToHide.includes(domNode.attribs.id)) return <></>;
         if(domNode.attribs.class){
-          const classNames = domNode.attribs.class.split(' ');
-          for(const className of classNames) {
-            if(classesToHide.includes(className)){
-              return <></>
-            }
+          for(const className of domNode.attribs.class.split(' ')) {
+            if(classesToHide.includes(className)) return <></>;
           }
         }
         if(domNode.name === 'a') return (
-          <span onClick={handleLinkClick} className="replaced-link" url={domNode.attribs.href}>{domToReact(domNode.children)}</span>
+          <span onClick={() => handleLinkClick(domNode.attribs.href)} className="replaced-link">{domToReact(domNode.children)}</span>
         )
       }
     });
