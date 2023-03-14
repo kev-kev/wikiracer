@@ -19,12 +19,20 @@ const WikipediaContent = () => {
     const res = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${curArticle}&origin=*`);
     const data = await res.json();
     const rawHTML = await data.parse?.text['*'];
-    // debugger
     const parsedData = parse(rawHTML?.toString(), {
       replace: domNode => {
-        if(classesToHide.includes(domNode.attribs?.class) || idsToHide.includes(domNode.attribs?.id)) return <></>
+        if(!domNode.attribs) return;
+        if(idsToHide.includes(domNode.attribs.id)) return <></>
+        if(domNode.attribs.class){
+          const classNames = domNode.attribs.class.split(' ');
+          for(const className of classNames) {
+            if(classesToHide.includes(className)){
+              return <></>
+            }
+          }
+        }
         if(domNode.name === 'a') return (
-          <span onClick={handleLinkClick} className="replaced-link" >{domToReact(domNode.children)}</span>
+          <span onClick={handleLinkClick} className="replaced-link" url={domNode.attribs.href}>{domToReact(domNode.children)}</span>
         )
       }
     });
