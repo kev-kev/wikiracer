@@ -32,7 +32,8 @@ const getUniqueID = () => {
 const createNewRoom = (username, socket) => {
   const roomID = getUniqueID();
   rooms[roomID] = {"host": username};
-  console.log('hosting room: ' + roomID);
+  console.log('hosting room: ' + roomID + ' in ' + Object.keys(rooms));
+  //TODO: fix room cleanup
   socket.join(roomID);
   return roomID;
 }
