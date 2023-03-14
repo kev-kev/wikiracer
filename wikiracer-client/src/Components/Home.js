@@ -19,7 +19,7 @@ const Home = (props) => {
   // Clear Context values if you return Home
   useEffect(() => {
     clearContext();
-  }, []);
+  }, [clearContext]);
 
   const handleJoinClick = () => {
      console.log("Joined");
@@ -75,8 +75,6 @@ const Home = (props) => {
       </button>
       <br/>
     </div>
-
-   
   )
 }
 

@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { GlobalContext } from '../context/GlobalContext'
 
 const classNamesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar']
 
 const hideClass = (className) => {
   const eles = document.getElementsByClassName(className);
-  for(const ele of eles) ele.setAttribute('style', 'display: none;')
+  for(const ele of eles) ele.setAttribute('style', 'display: none;');
 }
 
 const WikipediaContent = () => {
