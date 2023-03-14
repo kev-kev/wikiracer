@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
 // import { parse } from 'node-html-parser';
-import parse  from 'html-react-parser';
+import parse, { domToReact }  from 'html-react-parser';
 
 const classesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar'];
 const idsToHide = ['References', 'Notes'];
@@ -22,29 +22,15 @@ const WikipediaContent = () => {
     // debugger
     const parsedData = parse(rawHTML?.toString(), {
       replace: domNode => {
+        if(classesToHide.includes(domNode.attribs?.class) || idsToHide.includes(domNode.attribs?.id)) return <></>
         if(domNode.name === 'a') return (
-          <span onClick={handleLinkClick}>hihi</span>
+          <span onClick={handleLinkClick} className="replaced-link" >{domToReact(domNode.children)}</span>
         )
-        // debugger
       }
     });
-    // for(const className of classesToHide) {
-    //   for(const ele of parsedData.querySelectorAll('.'+className)) ele.setAttribute('style', 'display: none;');
-    // }
-    // for(const id of idsToHide) parsedData.querySelector('#'+id).setAttribute('style', 'display: none;');
-
-    // for(const link of parsedData.querySelectorAll('a')) {
-    //   debugger
-    // }
-    // debugger
     setArticleText(parsedData);
     setIsFetching(false);
   }
-  
-  /**
-   * want to have links keep you in the room, but change the content of the curArticle
-   * get all anchor tags and add onclick handler
-   */
 
   useEffect(() => {
     getArticle();
