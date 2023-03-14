@@ -1,8 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { GlobalContext } from '../context/GlobalContext'
 
-const removeReferencesFromArticle = (article) => {
-  debugger
+const classNamesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar']
+
+const hideClass = (className) => {
+  const eles = document.getElementsByClassName(className);
+  for(const ele of eles) ele.setAttribute('style', 'display: none;')
 }
 
 const WikipediaContent = () => {
@@ -23,7 +26,7 @@ const WikipediaContent = () => {
   useEffect(() => {
     document.getElementById('References')?.parentElement.setAttribute('style', 'display: none;');
     document.getElementById('Notes')?.parentElement.setAttribute('style', 'display: none;');
-    for(const refList of document.getElementsByClassName('reflist'))refList.setAttribute('style', 'display: none;')
+    for(const className of classNamesToHide) hideClass(className);
   }, [articleText])
 
   return(
