@@ -1,5 +1,5 @@
-import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams, Navigate, useLocation } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 import WikipediaContent from './WikipediaContent';
 
@@ -22,6 +22,7 @@ const Room = ({socket}) => {
   } = useContext(GlobalContext);
   const navigate = useNavigate();
   const urlParams = useParams();
+  const location = useLocation();
   
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, exit room.
@@ -32,6 +33,12 @@ const Room = ({socket}) => {
     setStartArticle("waluigi");
     setEndArticle("wario");
   }, []);
+
+  useEffect(() => {
+    window.onpopstate = () => {
+      handleExitRoom();
+    }
+  })
 
   const handleStartGame = () => {
     console.log("Start game clicked");
@@ -46,11 +53,7 @@ const Room = ({socket}) => {
   };
 
   const renderGameArea = () => {
-    if (gameInProgress) {
-      return "GAME IS IN PROGRESS!";
-    } else if (!isHost) {
-      return "Waiting for host to start game...";
-    }
+    return gameInProgress ? "Game is in progress!" : "Waiting for host to start the game..."
   } 
 
   const handleWinGame = () => {

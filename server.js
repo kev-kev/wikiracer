@@ -46,17 +46,12 @@ const joinRoom = (username, roomID, socket) => {
 
 io.on("connection", (socket) => {
   console.log("Client connected");
-
-  // Events that come from the frontend -> backend
-  // That may either send back info to the same frontend
-  // Or cause an emit of an event to the other connected frontends
   socket.on("NEW_ROOM", (username, cb) => {
     const newRoomCode = createNewRoom(username, socket);
     cb({
       roomCode: newRoomCode,
     });
   });
-  // join room
   socket.on("JOIN_ROOM", (roomID, username, cb) => {
     joinRoom(username, roomID, socket);
     cb({
@@ -65,23 +60,18 @@ io.on("connection", (socket) => {
     });
     socket.to(roomID).emit("USER_JOINED_ROOM", username);
   });
-  // game start
   socket.on("GAME_START", (roomID) => {
     socket.to(roomID).emit("HOST_STARTED_GAME");
   });
-  // game win
   socket.on("GAME_WIN", (username, roomID) => {
-    // What do we send to the room when game is won by someone?
     socket.to(roomID).emit("USER_WIN", username);
   });
-  // forfeit
   socket.on("GAME_FORFEIT", (username, roomID) => {
-    // What do we send to the room when game is forfeited by someone?
     socket.to(roomID).emit("USER_FORFEIT", username);
   });
-  // leave room
   socket.on("USER_LEFT", (isHost, roomID) => {
     if(isHost){
+      console.log('deleting empty room', roomID)
       delete rooms[roomID];
       socket.to(roomID).emit("HOST_LEFT");
     }
@@ -92,4 +82,3 @@ io.on("connection", (socket) => {
   });
 });
 
-// TODO: room cleanup
