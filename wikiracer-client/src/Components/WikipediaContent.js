@@ -23,11 +23,15 @@ const WikipediaContent = () => {
     setIsFetching();
     const res = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${curArticle}&origin=*`);
     const data = await res.json();
-    setArticleTitle(data.parse?.title);
+    setArticleTitle(data.parse?.title); 
     const rawHTML = data.parse?.text['*'];
     const parsedData = parse(rawHTML?.toString(), {
       replace: domNode => {
         if(!domNode.attribs) return;
+        if(domNode.attribs.class === 'redirectText') {
+          setCurArticle(domNode.children[0].children[0].attribs.href.split('/').at(-1));
+          return;
+        }
         if(idsToHide.includes(domNode.attribs.id)) return <></>;
         if(domNode.attribs.class){
           for(const className of domNode.attribs.class.split(' ')) {
@@ -36,7 +40,7 @@ const WikipediaContent = () => {
         }
         if(domNode.name === 'a') return (
           <span onClick={() => handleLinkClick(domNode.attribs.href)} className="replaced-link">{domToReact(domNode.children)}</span>
-        );
+        ); 
       }
     });
     setArticleText(parsedData);
