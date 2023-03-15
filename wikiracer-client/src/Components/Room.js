@@ -3,6 +3,9 @@ import { useContext, useEffect } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 import WikipediaContent from './WikipediaContent';
 
+const compareArticles = (str1, str2) => {
+  return str1.toLowerCase().split("_").join(" ") === str2.toLowerCase().split("_").join(" "); 
+}
 const Room = ({socket}) => {
   const {
     host,
@@ -19,6 +22,7 @@ const Room = ({socket}) => {
     setStartArticle,
     endArticle,
     setEndArticle,
+    curArticle
   } = useContext(GlobalContext);
   const navigate = useNavigate();
   const urlParams = useParams();
@@ -39,6 +43,10 @@ const Room = ({socket}) => {
       handleExitRoom();
     }
   })
+
+  useEffect(() => {
+    if(curArticle && compareArticles(curArticle, endArticle)) winGame();
+  }, [curArticle])
 
   const handleStartGame = () => {
     console.log("Start game clicked");

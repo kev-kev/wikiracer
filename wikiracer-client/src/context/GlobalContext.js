@@ -57,6 +57,7 @@ export const GlobalProvider = ({ children }) => {
   }
 
   const winGame = (username) => {
+    console.log('game won!')
     // TODO: score for winner
     endGame();
     dispatch({
