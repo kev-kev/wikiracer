@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
 // import { parse } from 'node-html-parser';
 import parse, { domToReact }  from 'html-react-parser';
@@ -8,19 +8,23 @@ const idsToHide = ['References', 'Notes'];
 
 
 const WikipediaContent = () => {
-  const { curArticle, isFetching, setIsFetching, articleText, setArticleText, setCurArticle } = useContext(GlobalContext);
+  const { curArticle, isFetching, setIsFetching, setCurArticle } = useContext(GlobalContext);
+  const [articleTitle, setArticleTitle] = useState("");
+  const [articleText, setArticleText] = useState("");
+
   
   const handleLinkClick = (link) => {
     link = link.split('/').at(-1);
-    setCurArticle(link)
+    setCurArticle(link);
   }
 
   const getArticle = async () => {
-    if(!curArticle)return;
+    if(!curArticle) return;
     setIsFetching();
     const res = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${curArticle}&origin=*`);
     const data = await res.json();
-    const rawHTML = await data.parse?.text['*'];
+    setArticleTitle(data.parse?.title);
+    const rawHTML = data.parse?.text['*'];
     const parsedData = parse(rawHTML?.toString(), {
       replace: domNode => {
         if(!domNode.attribs) return;
@@ -32,7 +36,7 @@ const WikipediaContent = () => {
         }
         if(domNode.name === 'a') return (
           <span onClick={() => handleLinkClick(domNode.attribs.href)} className="replaced-link">{domToReact(domNode.children)}</span>
-        )
+        );
       }
     });
     setArticleText(parsedData);
@@ -52,9 +56,10 @@ const WikipediaContent = () => {
     )
     : (  
       <div className="articleContainer">
+        <h2>{articleTitle}</h2>
         {articleText}
       </div>
-    ))  
+    ));
 }
 
 export default WikipediaContent

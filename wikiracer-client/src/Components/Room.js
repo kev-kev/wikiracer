@@ -1,4 +1,4 @@
-import { useNavigate, useParams, Navigate, useLocation } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 import WikipediaContent from './WikipediaContent';
@@ -25,8 +25,6 @@ const Room = ({socket}) => {
     curArticle
   } = useContext(GlobalContext);
   const navigate = useNavigate();
-  const urlParams = useParams();
-  const location = useLocation();
   
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, exit room.
