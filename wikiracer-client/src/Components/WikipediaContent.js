@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
-// import { parse } from 'node-html-parser';
 import parse, { domToReact }  from 'html-react-parser';
 
 const classesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar'];

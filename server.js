@@ -31,17 +31,16 @@ const getUniqueID = () => {
 
 const createNewRoom = (username, socket) => {
   const roomID = getUniqueID();
-  rooms[roomID] = {"host": username};
+  rooms[roomID] = {"host": socket.id};
   console.log('hosting room: ' + roomID + ' in ' + Object.keys(rooms));
-  //TODO: fix room cleanup
   socket.join(roomID);
   return roomID;
 }
 
 const joinRoom = (username, roomID, socket) => {
-  rooms[roomID]["guest"] = username;
+  rooms[roomID]["guest"] = socket.id;
   socket.join(roomID);
-  console.log("joined room: " + roomID);
+  console.log(username + "joined room: " + roomID);
 }
 
 io.on("connection", (socket) => {
@@ -69,16 +68,32 @@ io.on("connection", (socket) => {
   socket.on("GAME_FORFEIT", (username, roomID) => {
     socket.to(roomID).emit("USER_FORFEIT", username);
   });
-  socket.on("USER_LEFT", (isHost, roomID) => {
-    if(isHost){
-      console.log('deleting empty room', roomID)
-      delete rooms[roomID];
-      socket.to(roomID).emit("HOST_LEFT");
-    }
-    else {
-      rooms[roomID]["guest"] = "";
-      socket.to(roomID).emit("GUEST_LEFT");
+  socket.on("USER_LEFT", (roomID) => {
+    handleRoomLeave(roomID, socket)
+  });
+  socket.on("disconnecting", () => {
+    for(const room of socket.rooms) {
+      if (rooms[room]) {
+        console.log(socket.id, 'disconnected');
+        if(rooms[room]["host"] === socket.id) socket.to(room).emit("HOST_LEFT");
+        else socket.to(room).emit("GUEST_LEFT");
+      }
     }
   });
 });
 
+const handleRoomLeave = (roomID, socket) => {
+  const isHost = () => {
+    if(rooms[roomID]["host"] === socket.id) return true
+    else return false;
+  }
+  if(isHost){
+    console.log('deleting empty room', roomID);
+    delete rooms[roomID];
+    socket.to(roomID).emit("HOST_LEFT");
+  }
+  else {
+    rooms[roomID]["guest"] = "";
+    socket.to(roomID).emit("GUEST_LEFT");
+  }
+}

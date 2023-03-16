@@ -43,7 +43,7 @@ const Room = ({socket}) => {
   })
 
   useEffect(() => {
-    if(curArticle && compareArticles(curArticle, endArticle)) winGame();
+    if(curArticle && compareArticles(curArticle, endArticle)) winGame(username);
   }, [curArticle])
 
   const handleStartGame = () => {
@@ -54,7 +54,7 @@ const Room = ({socket}) => {
 
   // TODO: Set idle timeout and trigger exit room if nothing happens (stretch)
   const handleExitRoom = () => {
-    socket.emit("USER_LEFT", isHost, roomCode);
+    socket.emit("USER_LEFT", roomCode);
     navigate("/");
   };
 
