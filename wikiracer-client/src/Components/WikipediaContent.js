@@ -1,26 +1,26 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
 import parse, { domToReact }  from 'html-react-parser';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link, useNavigationType} from 'react-router-dom';
 
 const classesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar'];
 const idsToHide = ['References', 'Notes'];
 
 const WikipediaContent = () => {
-  const { curArticle, isFetching, setIsFetching, setCurArticle, roomCode, history, setHistory, startArticle } = useContext(GlobalContext);
+  const { isFetching, setIsFetching, roomCode, startArticle } = useContext(GlobalContext);
   const [articleText, setArticleText] = useState("");
   let { articleTitle } = useParams();
   const navigate = useNavigate();
   
-  window.onpopstate = (data) => {
-    debugger
-    data.state.idx > history.length ? setHistory([...history, articleTitle]) : setHistory(history.slice(0, history.length-1));
-  }
+  // window.onpopstate = (data) => {
+  //   debugger
+  //   data.state.idx > history.length ? setHistory([...history, articleTitle]) : setHistory(history.slice(0, history.length-1));
+  // }
 
-  useEffect(() => {
-    const location = history.at(-1) || startArticle;
-    navigate(`/room/${roomCode}/${location}`)
-  }, [history])
+  // useEffect(() => {
+  //   const location = history.at(-1) || startArticle;
+  //   navigate(`/room/${roomCode}/${location}`)
+  // }, [history])
 
   useEffect(() => {
     getArticle();
@@ -52,10 +52,10 @@ const WikipediaContent = () => {
             <Link 
               to={`/room/${roomCode}/${linkedArticleName}`} 
               className="replaced-link"
-              onClick={() => {
-                // setCurArticle(linkedArticleName)
-                navigate(`/room/${roomCode}/${linkedArticleName}`)
-              }}
+              // onClick={() => {
+              //   // setCurArticle(linkedArticleName)
+              //   // navigate(`/room/${roomCode}/${linkedArticleName}`)
+              // }}
             >
               {domToReact(domNode.children)}
             </Link>
@@ -63,7 +63,7 @@ const WikipediaContent = () => {
         }
       }
     });
-    if(history.at(-1) !== articleTitle) setHistory([...history, articleTitle])
+    // if(history.at(-1) !== articleTitle) setHistory([...history, articleTitle])
     setArticleText(parsedData);
     setIsFetching(false);
   }

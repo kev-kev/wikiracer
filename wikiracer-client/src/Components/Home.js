@@ -16,11 +16,6 @@ const Home = (props) => {
     clearContext
   } = useContext(GlobalContext);
 
-  // Clear Context values if you return Home
-  useEffect(() => {
-    clearContext();
-  }, [clearContext]);
-
   const handleJoinClick = () => {
      console.log("Joined");
      props.socket.emit(
