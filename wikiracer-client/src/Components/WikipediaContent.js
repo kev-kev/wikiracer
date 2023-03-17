@@ -7,9 +7,8 @@ const classesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar'];
 const idsToHide = ['References', 'Notes'];
 
 const WikipediaContent = () => {
-  const { curArticle, isFetching, setIsFetching, setCurArticle, roomCode, history, setHistory } = useContext(GlobalContext);
+  const { curArticle, isFetching, setIsFetching, setCurArticle, roomCode, history, setHistory, startArticle } = useContext(GlobalContext);
   const [articleText, setArticleText] = useState("");
-  // const [history, setHistory] = useState([curArticle]);
   let { articleTitle } = useParams();
   
   window.onpopstate = (data) => {
@@ -17,15 +16,8 @@ const WikipediaContent = () => {
   }
 
   useEffect(() => {
-    setCurArticle(history.at(-1));
+    setCurArticle(history.at(-1) || startArticle);
   }, [history])
-  
-  useEffect(() => {
-    getArticle();
-  }, [curArticle])
-  const handleLinkClick = (link) => {
-    setCurArticle(link);
-  }
 
   const getArticle = async () => {
     if(!curArticle) return;
@@ -37,7 +29,8 @@ const WikipediaContent = () => {
       replace: domNode => {
         if(!domNode.attribs) return;
         if(domNode.attribs.class === 'redirectText') {
-          setCurArticle(domNode.children[0].children[0].attribs.href.split('/').at(-1).split('#').at(0));
+          console.log("Redirecting to ", data.parse.links.at(-1)['*']);
+          setCurArticle(data.parse.links.at(-1)['*']);
           return;
         }
         if(idsToHide.includes(domNode.attribs.id)) return <></>;
@@ -52,7 +45,7 @@ const WikipediaContent = () => {
             <Link 
               to={`/room/${roomCode}/${articleName}`} 
               className="replaced-link"
-              onClick={() => handleLinkClick(articleName)}
+              onClick={() => setCurArticle(articleName)}
             >
               {domToReact(domNode.children)}
             </Link>
