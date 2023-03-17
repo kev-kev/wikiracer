@@ -12,9 +12,8 @@ const WikipediaContent = () => {
   // const [history, setHistory] = useState([curArticle]);
   let { articleTitle } = useParams();
   
-  window.onpopstate = () => {
-    // debugger
-    setHistory(history.slice(0, history.length-1))
+  window.onpopstate = (data) => {
+    data.state.idx > history.length ? setHistory([...history, articleTitle]) : setHistory(history.slice(0, history.length-1));
   }
 
   useEffect(() => {
@@ -33,13 +32,12 @@ const WikipediaContent = () => {
     setIsFetching();
     const res = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${curArticle}&origin=*`);
     const data = await res.json();
-    setArticleTitle(data.parse?.title); 
     const rawHTML = data.parse?.text['*'];
     const parsedData = parse(rawHTML?.toString(), {
       replace: domNode => {
         if(!domNode.attribs) return;
         if(domNode.attribs.class === 'redirectText') {
-          setCurArticle(domNode.children[0].children[0].attribs.href.split('/').at(-1));
+          setCurArticle(domNode.children[0].children[0].attribs.href.split('/').at(-1).split('#').at(0));
           return;
         }
         if(idsToHide.includes(domNode.attribs.id)) return <></>;
@@ -62,7 +60,7 @@ const WikipediaContent = () => {
         }
       }
     });
-    setHistory([...history, curArticle])
+    if(history.at(-1) !== curArticle) setHistory([...history, curArticle])
     setArticleText(parsedData);
     setIsFetching(false);
   }
