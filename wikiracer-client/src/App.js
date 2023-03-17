@@ -21,6 +21,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home socket={socket} />} />
           <Route path="/room/:id" element={<Room socket={socket} />} />
+          <Route path="/room/:id/:articleTitle" element={<Room socket={socket} />} />
         </Routes>
       </BrowserRouter>
     </GlobalProvider>

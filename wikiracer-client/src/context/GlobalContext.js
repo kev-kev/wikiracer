@@ -12,6 +12,7 @@ export const initialState = {
   endArticle: "",
   curArticle: "",
   isFetching: false,
+  history: [],
 };
 
 export const GlobalContext = createContext(initialState);
@@ -120,6 +121,13 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
+  const setHistory = (history) => {
+    dispatch({
+      type: "SET_HISTORY",
+      payload: history
+    })
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -148,6 +156,8 @@ export const GlobalProvider = ({ children }) => {
         setCurArticle,
         isFetching: state.isFetching,
         setIsFetching,
+        history: state.history,
+        setHistory,
       }}
     >
       {children}

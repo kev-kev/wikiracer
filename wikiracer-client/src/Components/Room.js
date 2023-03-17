@@ -1,4 +1,4 @@
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 import WikipediaContent from './WikipediaContent';
@@ -35,12 +35,6 @@ const Room = ({socket}) => {
     setStartArticle("waluigi");
     setEndArticle("wario");
   }, []);
-
-  useEffect(() => {
-    window.onpopstate = () => {
-      handleExitRoom();
-    }
-  })
 
   useEffect(() => {
     if(curArticle && compareArticles(curArticle, endArticle)) winGame(username);

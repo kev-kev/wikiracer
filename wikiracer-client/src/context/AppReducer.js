@@ -64,6 +64,11 @@ export default (state, action) => {
         ...state,
         articleText: action.payload
       }
+    case "SET_HISTORY":
+      return {
+        ...state,
+        history: action.payload
+      }
     case "CLEAR_CONTEXT":
       return initialState;
     default:

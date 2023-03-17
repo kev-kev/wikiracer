@@ -1,19 +1,30 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
 import parse, { domToReact }  from 'html-react-parser';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 const classesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar'];
 const idsToHide = ['References', 'Notes'];
 
-
 const WikipediaContent = () => {
-  const { curArticle, isFetching, setIsFetching, setCurArticle } = useContext(GlobalContext);
-  const [articleTitle, setArticleTitle] = useState("");
+  const { curArticle, isFetching, setIsFetching, setCurArticle, roomCode, history, setHistory } = useContext(GlobalContext);
   const [articleText, setArticleText] = useState("");
-
+  // const [history, setHistory] = useState([curArticle]);
+  let { articleTitle } = useParams();
   
+  window.onpopstate = () => {
+    // debugger
+    setHistory(history.slice(0, history.length-1))
+  }
+
+  useEffect(() => {
+    setCurArticle(history.at(-1));
+  }, [history])
+  
+  useEffect(() => {
+    getArticle();
+  }, [curArticle])
   const handleLinkClick = (link) => {
-    link = link.split('/').at(-1);
     setCurArticle(link);
   }
 
@@ -37,11 +48,21 @@ const WikipediaContent = () => {
             if(classesToHide.includes(className)) return <></>;
           }
         }
-        if(domNode.name === 'a') return (
-          <span onClick={() => handleLinkClick(domNode.attribs.href)} className="replaced-link">{domToReact(domNode.children)}</span>
-        ); 
+        if(domNode.name === 'a') {
+          const articleName = domNode.attribs.href?.split('/').at(-1);
+          return (
+            <Link 
+              to={`/room/${roomCode}/${articleName}`} 
+              className="replaced-link"
+              onClick={() => handleLinkClick(articleName)}
+            >
+              {domToReact(domNode.children)}
+            </Link>
+          );
+        }
       }
     });
+    setHistory([...history, curArticle])
     setArticleText(parsedData);
     setIsFetching(false);
   }
