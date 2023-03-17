@@ -12,16 +12,6 @@ const WikipediaContent = () => {
   let { articleTitle } = useParams();
   const navigate = useNavigate();
   
-  // window.onpopstate = (data) => {
-  //   debugger
-  //   data.state.idx > history.length ? setHistory([...history, articleTitle]) : setHistory(history.slice(0, history.length-1));
-  // }
-
-  // useEffect(() => {
-  //   const location = history.at(-1) || startArticle;
-  //   navigate(`/room/${roomCode}/${location}`)
-  // }, [history])
-
   useEffect(() => {
     getArticle();
   }, [articleTitle])
@@ -49,21 +39,13 @@ const WikipediaContent = () => {
         if(domNode.name === 'a') {
           const linkedArticleName = domNode.attribs.href?.split('/').at(-1);
           return (
-            <Link 
-              to={`/room/${roomCode}/${linkedArticleName}`} 
-              className="replaced-link"
-              // onClick={() => {
-              //   // setCurArticle(linkedArticleName)
-              //   // navigate(`/room/${roomCode}/${linkedArticleName}`)
-              // }}
-            >
+            <Link to={`/room/${roomCode}/${linkedArticleName}`} className="replaced-link">
               {domToReact(domNode.children)}
             </Link>
           );
         }
       }
     });
-    // if(history.at(-1) !== articleTitle) setHistory([...history, articleTitle])
     setArticleText(parsedData);
     setIsFetching(false);
   }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
@@ -13,7 +13,6 @@ const Home = (props) => {
     setHost,
     setIsHost,
     setGuest,
-    clearContext
   } = useContext(GlobalContext);
 
   const handleJoinClick = () => {

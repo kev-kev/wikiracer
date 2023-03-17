@@ -28,9 +28,6 @@ const Room = ({socket}) => {
   
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, exit room.
-
-  // TODO: Add timer to state https://upmostly.com/tutorials/settimeout-in-react-components-using-hooks
-
   useEffect(() => {
     setStartArticle("waluigi");
     setEndArticle("wario");
