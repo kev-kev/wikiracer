@@ -10,19 +10,26 @@ const WikipediaContent = () => {
   const { curArticle, isFetching, setIsFetching, setCurArticle, roomCode, history, setHistory, startArticle } = useContext(GlobalContext);
   const [articleText, setArticleText] = useState("");
   let { articleTitle } = useParams();
+  const navigate = useNavigate();
   
   window.onpopstate = (data) => {
+    debugger
     data.state.idx > history.length ? setHistory([...history, articleTitle]) : setHistory(history.slice(0, history.length-1));
   }
 
   useEffect(() => {
-    setCurArticle(history.at(-1) || startArticle);
+    const location = history.at(-1) || startArticle;
+    navigate(`/room/${roomCode}/${location}`)
   }, [history])
 
+  useEffect(() => {
+    getArticle();
+  }, [articleTitle])
+
   const getArticle = async () => {
-    if(!curArticle) return;
+    if(!articleTitle) return;
     setIsFetching();
-    const res = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${curArticle}&origin=*`);
+    const res = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${articleTitle}&origin=*`);
     const data = await res.json();
     const rawHTML = data.parse?.text['*'];
     const parsedData = parse(rawHTML?.toString(), {
@@ -30,7 +37,7 @@ const WikipediaContent = () => {
         if(!domNode.attribs) return;
         if(domNode.attribs.class === 'redirectText') {
           console.log("Redirecting to ", data.parse.links.at(-1)['*']);
-          setCurArticle(data.parse.links.at(-1)['*']);
+          navigate(`/room/${roomCode}/${data.parse.links.at(-1)['*']}`);
           return;
         }
         if(idsToHide.includes(domNode.attribs.id)) return <></>;
@@ -40,12 +47,15 @@ const WikipediaContent = () => {
           }
         }
         if(domNode.name === 'a') {
-          const articleName = domNode.attribs.href?.split('/').at(-1);
+          const linkedArticleName = domNode.attribs.href?.split('/').at(-1);
           return (
             <Link 
-              to={`/room/${roomCode}/${articleName}`} 
+              to={`/room/${roomCode}/${linkedArticleName}`} 
               className="replaced-link"
-              onClick={() => setCurArticle(articleName)}
+              onClick={() => {
+                // setCurArticle(linkedArticleName)
+                navigate(`/room/${roomCode}/${linkedArticleName}`)
+              }}
             >
               {domToReact(domNode.children)}
             </Link>
@@ -53,14 +63,10 @@ const WikipediaContent = () => {
         }
       }
     });
-    if(history.at(-1) !== curArticle) setHistory([...history, curArticle])
+    if(history.at(-1) !== articleTitle) setHistory([...history, articleTitle])
     setArticleText(parsedData);
     setIsFetching(false);
   }
-
-  useEffect(() => {
-    getArticle();
-  }, [curArticle]);
 
   return(
     isFetching ? (

@@ -1,4 +1,4 @@
-import { useNavigate, Navigate, } from 'react-router-dom';
+import { useNavigate, Navigate, useParams, } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 import WikipediaContent from './WikipediaContent';
@@ -22,9 +22,9 @@ const Room = ({socket}) => {
     setStartArticle,
     endArticle,
     setEndArticle,
-    curArticle
   } = useContext(GlobalContext);
   const navigate = useNavigate();
+  const { articleTitle } = useParams();
   
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, exit room.
@@ -37,8 +37,12 @@ const Room = ({socket}) => {
   }, []);
 
   useEffect(() => {
-    if(curArticle && compareArticles(curArticle, endArticle)) winGame(username);
-  }, [curArticle])
+    navigate(`/room/${roomCode}/${startArticle}`);
+  }, [startArticle])
+
+  useEffect(() => {
+    if(articleTitle && compareArticles(articleTitle, endArticle)) winGame(username);
+  }, [articleTitle])
 
   const handleStartGame = () => {
     console.log("Start game clicked");

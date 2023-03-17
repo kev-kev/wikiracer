@@ -49,11 +49,6 @@ export default (state, action) => {
         ...state,
         endArticle: action.payload,
       }
-    case "SET_CUR_ARTICLE":
-      return {
-        ...state,
-        curArticle: action.payload
-      }
     case "SET_IS_FETCHING":
       return {
         ...state,

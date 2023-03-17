@@ -10,7 +10,6 @@ export const initialState = {
   winner: "",
   startArticle: "",
   endArticle: "",
-  curArticle: "",
   isFetching: false,
   history: [],
 };
@@ -101,13 +100,6 @@ export const GlobalProvider = ({ children }) => {
     })
   }
 
-  const setCurArticle = (article) => {
-    dispatch({
-      type: "SET_CUR_ARTICLE",
-      payload: article
-    })
-  }
-
   const setIsFetching = (bool=true) => {
     dispatch({
       type: "SET_IS_FETCHING",
@@ -152,8 +144,6 @@ export const GlobalProvider = ({ children }) => {
         setStartArticle,
         endArticle: state.endArticle,
         setEndArticle,
-        curArticle: state.curArticle,
-        setCurArticle,
         isFetching: state.isFetching,
         setIsFetching,
         history: state.history,
