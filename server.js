@@ -79,9 +79,11 @@ const handleRoomLeave = (roomID, socket) => {
     console.log('deleting empty room', roomID);
     delete rooms[roomID];
     socket.to(roomID).emit("HOST_LEFT");
+    socket.leave(roomID);
   }
   else {
     rooms[roomID]["guest"] = "";
     socket.to(roomID).emit("GUEST_LEFT");
+    socket.leave(roomID);
   }
 }
