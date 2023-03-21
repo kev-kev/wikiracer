@@ -1,30 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 
 const Home = (props) => {
-  const [usernameInput, setUsernameInput] = useState("");
-  const [roomCodeInput, setRoomCodeInput] = useState("");
-
-  const navigate = useNavigate();
   const {
     setRoomCode,
     setHost,
     setIsHost,
     setGuest,
+    clearContext
   } = useContext(GlobalContext);
+  const [usernameInput, setUsernameInput] = useState("");
+  const [roomCodeInput, setRoomCodeInput] = useState("");
 
+  useEffect(() => {
+    clearContext();
+  }, [])
+  
+  const navigate = useNavigate();
+  
   const handleJoinClick = () => {
-     console.log("Joined");
-     props.socket.emit(
+    console.log("Joined");
+    props.socket.emit(
       "JOIN_ROOM", roomCodeInput, usernameInput, (response) => {
         setRoomCode(roomCodeInput);
         setGuest(usernameInput);
         setHost(response.room.host)
-        navigate(`/room/${roomCodeInput}`);
+        navigate(`/room/${roomCodeInput}/`);
       }
-     )
+    )
   }
 
   const handleHostClick = () => {
@@ -35,7 +40,7 @@ const Home = (props) => {
           setRoomCode(roomCode);
           setHost(usernameInput);
           setIsHost(true);
-          navigate(`/room/${roomCode}`);
+          navigate(`/room/${roomCode}/`);
         }
       );
   }

@@ -27,7 +27,7 @@ const WikipediaContent = () => {
         if(!domNode.attribs) return;
         if(domNode.attribs.class === 'redirectText') {
           console.log("Redirecting to ", data.parse.links.at(-1)['*']);
-          navigate(`/room/${roomCode}/${data.parse.links.at(-1)['*']}`);
+          navigate(`/room/${roomCode}/${data.parse.links.at(-1)['*']}/`);
           return;
         }
         if(idsToHide.includes(domNode.attribs.id)) return <></>;
@@ -39,7 +39,7 @@ const WikipediaContent = () => {
         if(domNode.name === 'a') {
           const linkedArticleName = domNode.attribs.href?.split('/').at(-1);
           return (
-            <Link to={`/room/${roomCode}/${linkedArticleName}`} className="replaced-link">
+            <Link to={`/room/${roomCode}/${linkedArticleName}/`} className="replaced-link">
               {domToReact(domNode.children)}
             </Link>
           );

@@ -1,11 +1,13 @@
-import { useNavigate, Navigate, useParams, } from 'react-router-dom';
+import { useNavigate, Navigate, useParams, useLocation } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 import WikipediaContent from './WikipediaContent';
 
+
 const compareArticles = (str1, str2) => {
   return str1.toLowerCase().split("_").join(" ") === str2.toLowerCase().split("_").join(" "); 
 }
+
 const Room = ({socket}) => {
   const {
     host,
@@ -22,6 +24,7 @@ const Room = ({socket}) => {
     setStartArticle,
     endArticle,
     setEndArticle,
+    clearContext
   } = useContext(GlobalContext);
   const navigate = useNavigate();
   const { articleTitle } = useParams();
@@ -34,12 +37,12 @@ const Room = ({socket}) => {
   }, []);
 
   useEffect(() => {
-    navigate(`/room/${roomCode}/${startArticle}`);
-  }, [startArticle])
+    navigate(`/room/${roomCode}/${startArticle}/`);
+  }, [startArticle]);
 
   useEffect(() => {
     if(articleTitle && compareArticles(articleTitle, endArticle)) winGame(username);
-  }, [articleTitle])
+  }, [articleTitle]);
 
   const handleStartGame = () => {
     console.log("Start game clicked");
@@ -50,6 +53,7 @@ const Room = ({socket}) => {
   // TODO: Set idle timeout and trigger exit room if nothing happens (stretch)
   const handleExitRoom = () => {
     socket.emit("USER_LEFT", roomCode);
+    clearContext();
     navigate("/");
   };
 
