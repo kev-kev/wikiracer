@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const ejs = require('ejs');
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -8,22 +7,9 @@ const io = require("socket.io")(server, {
     methods: ["GET", "POST"],
   },
 });
-const fetch = require("node-fetch");
 const PORT = 4001;
 server.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
-
-const path = require('path');
 const rooms = {};
-
-
-app.get('/wiki/:articleTitle', async (req, res) => {
-  const response = await fetch(`https://en.wikipedia.org/wiki/${req.params.articleTitle}`);
-  const body = await response.text();
-  ejs.renderFile(__dirname + '/wikiframe.ejs', {body: body, articleTitle: req.params.articleTitle}, {}, function(err, str) {
-    // str => Rendered HTML string
-    res.send(str);
-  });
-});
 
 const getUniqueID = () => {
   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -31,14 +17,16 @@ const getUniqueID = () => {
 
 const createNewRoom = (username, socket) => {
   const roomID = getUniqueID();
-  rooms[roomID] = {"host": socket.id};
+  rooms[roomID] = {"host": username};
+  socket.username = username;
   console.log('hosting room: ' + roomID + ' in ' + Object.keys(rooms));
   socket.join(roomID);
   return roomID;
 }
 
 const joinRoom = (username, roomID, socket) => {
-  rooms[roomID]["guest"] = socket.id;
+  socket.username = username;
+  rooms[roomID]["guest"] = username;
   socket.join(roomID);
   console.log(username + "joined room: " + roomID);
 }
@@ -74,8 +62,8 @@ io.on("connection", (socket) => {
   socket.on("disconnecting", () => {
     for(const room of socket.rooms) {
       if (rooms[room]) {
-        console.log(socket.id, 'disconnected');
-        if(rooms[room]["host"] === socket.id) socket.to(room).emit("HOST_LEFT");
+        console.log(socket.username, 'disconnected');
+        if(rooms[room]["host"] === socket.username) socket.to(room).emit("HOST_LEFT");
         else socket.to(room).emit("GUEST_LEFT");
       }
     }
@@ -84,7 +72,7 @@ io.on("connection", (socket) => {
 
 const handleRoomLeave = (roomID, socket) => {
   const isHost = () => {
-    if(rooms[roomID]["host"] === socket.id) return true
+    if(rooms[roomID]["host"] === socket.username) return true
     else return false;
   }
   if(isHost){

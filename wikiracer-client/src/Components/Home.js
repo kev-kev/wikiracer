@@ -26,7 +26,7 @@ const Home = (props) => {
       "JOIN_ROOM", roomCodeInput, usernameInput, (response) => {
         setRoomCode(roomCodeInput);
         setGuest(usernameInput);
-        setHost(response.room.host)
+        setHost(response.room["host"]);
         navigate(`/room/${roomCodeInput}/`);
       }
     )
