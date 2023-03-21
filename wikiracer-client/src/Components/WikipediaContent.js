@@ -7,7 +7,7 @@ const classesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar'];
 const idsToHide = ['References', 'Notes'];
 
 const WikipediaContent = () => {
-  const { isFetching, setIsFetching, roomCode, startArticle } = useContext(GlobalContext);
+  const { isFetching, setIsFetching, roomCode, gameInProgress, winner } = useContext(GlobalContext);
   const [articleText, setArticleText] = useState("");
   let { articleTitle } = useParams();
   const navigate = useNavigate();
@@ -50,19 +50,22 @@ const WikipediaContent = () => {
     setIsFetching(false);
   }
 
-  return(
-    isFetching ? (
-      // TODO: Replace with spinner
-      <div>
-        Loading...
-      </div>
-    )
-    : (  
+  if (isFetching) {
+    return (<div> Loading... </div>);
+  } else if (!gameInProgress) {
+    if (winner) {
+      return (<div>{winner} has won!</div>);
+    } else {
+      return (<div> Game has not started! </div>);
+    }
+  } else {
+    return (
       <div className="articleContainer">
         <h2>{articleTitle}</h2>
         {articleText}
       </div>
-    ));
+    );
+  }
 }
 
 export default WikipediaContent

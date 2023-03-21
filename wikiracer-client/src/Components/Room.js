@@ -41,7 +41,7 @@ const Room = ({socket}) => {
   }, [startArticle]);
 
   useEffect(() => {
-    if(articleTitle && compareArticles(articleTitle, endArticle)) winGame(username);
+    if(articleTitle && compareArticles(articleTitle, endArticle)) handleWinGame(username);
   }, [articleTitle]);
 
   const handleStartGame = () => {
