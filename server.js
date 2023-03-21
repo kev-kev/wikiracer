@@ -75,7 +75,7 @@ const handleRoomLeave = (roomID, socket) => {
     if(rooms[roomID]["host"] === socket.username) return true
     else return false;
   }
-  if(isHost){
+  if(isHost()){
     console.log('deleting empty room', roomID);
     delete rooms[roomID];
     socket.to(roomID).emit("HOST_LEFT");

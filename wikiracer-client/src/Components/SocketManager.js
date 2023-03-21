@@ -37,6 +37,7 @@ const SocketManager = (props) => {
 
     // other user left room
     props.socket.on("GUEST_LEFT", () => {
+      alert("the guest left the room! wait for a new guest >:0");
       clearGuest();
     });
 
