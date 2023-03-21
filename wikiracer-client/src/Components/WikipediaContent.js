@@ -7,7 +7,7 @@ const classesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar'];
 const idsToHide = ['References', 'Notes'];
 
 const WikipediaContent = () => {
-  const { isFetching, setIsFetching, roomCode, gameInProgress, winner } = useContext(GlobalContext);
+  const { isFetching, setIsFetching, roomCode, gameInProgress, winner, host } = useContext(GlobalContext);
   const [articleText, setArticleText] = useState("");
   let { articleTitle } = useParams();
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ const WikipediaContent = () => {
     if (winner) {
       return (<div>{winner} has won!</div>);
     } else {
-      return (<div> Game has not started! </div>);
+      return (<div> Waiting for {host} to start the game... </div>);
     }
   } else {
     return (
