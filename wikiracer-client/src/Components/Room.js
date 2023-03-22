@@ -28,7 +28,7 @@ const Room = ({socket}) => {
   const { roomID, articleTitle } = useParams();
   
   // TODO: When component mounts, check that this room ID exists
-  // in the server via socket event -- if it does not, exit room.
+  // in the server via socket event -- if it does not, redirect to /.
   useEffect(() => {
     setStartArticle("waluigi");
     setEndArticle("wario");
@@ -69,6 +69,25 @@ const Room = ({socket}) => {
     forfeitGame(username);
   }
 
+  const renderGameControls = () => {
+    return(
+      <>
+        <button
+          onClick={() => handleStartGame()}
+          disabled={!isHost || gameInProgress}
+        >
+          Start Game
+        </button><br />
+        {renderGameArea()}
+        <button onClick={() => handleWinGame()}>Win Game</button> <br/>
+        <button onClick={() => handleForfeitGame()}>Forfeit Game</button> <br/>
+        <button onClick={() => handleExitRoom()}>Exit Room</button> <br/>
+        <h3>Start: {startArticle}</h3>
+        <h3>End: {endArticle}</h3>
+      </>
+    )
+  }
+
   return (
     <>
       {!roomID && <Navigate to="/" />}
@@ -78,20 +97,7 @@ const Room = ({socket}) => {
       <div>
         <div>Host: {host} {isHost ? "(You)" : ""}</div>
         <div>Guest: {guest} {isHost ? "" : "(You)"}</div>
-        <button
-          onClick={() => handleStartGame()}
-          disabled={!isHost || gameInProgress}
-        >
-          Start Game
-        </button><br />
-        {renderGameArea()}
-        <button onClick={() => handleWinGame()}>Win Game</button>
-        <br/>
-        <button onClick={() => handleForfeitGame()}>Forfeit Game</button>
-        <br/>
-        <button onClick={() => handleExitRoom()}>Exit Room</button> <br/>
-        <h3>Start: {startArticle}</h3>
-        <h3>End: {endArticle}</h3>
+        {isHost && renderGameControls()}
         <WikipediaContent />
       </div>
     </>
