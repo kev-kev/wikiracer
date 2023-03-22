@@ -35,7 +35,7 @@ const SocketManager = (props) => {
       console.log(`game forfeited by ${username}`)
     });
 
-    // other user left room
+    // guest left room
     props.socket.on("GUEST_LEFT", () => {
       alert("the guest left the room! wait for a new guest >:0");
       clearGuest();

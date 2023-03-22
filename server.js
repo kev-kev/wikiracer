@@ -34,16 +34,16 @@ const joinRoom = (username, roomID, socket) => {
 io.on("connection", (socket) => {
   console.log("Client connected");
   socket.on("NEW_ROOM", (username, cb) => {
-    const newRoomCode = createNewRoom(username, socket);
+    const newRoomID = createNewRoom(username, socket);
     cb({
-      roomCode: newRoomCode,
+      roomID: newRoomID,
     });
   });
   socket.on("JOIN_ROOM", (roomID, username, cb) => {
     joinRoom(username, roomID, socket);
     cb({
       room: rooms[roomID],
-      roomCode: roomID
+      roomID: roomID
     });
     socket.to(roomID).emit("USER_JOINED_ROOM", username);
   });

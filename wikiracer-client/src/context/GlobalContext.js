@@ -2,7 +2,7 @@ import React, { createContext, useReducer } from "react";
 import AppReducer from "./AppReducer";
 
 export const initialState = {
-  roomCode: "",
+  // roomCode: "",
   host: "",
   guest: "",
   gameInProgress: false,
@@ -18,12 +18,12 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
-  const setRoomCode = (roomCode) => {
-    dispatch({
-      type: "SET_ROOM_CODE",
-      payload: roomCode,
-    });
-  };
+  // const setRoomCode = (roomCode) => {
+  //   dispatch({
+  //     type: "SET_ROOM_CODE",
+  //     payload: roomCode,
+  //   });
+  // };
 
   const setHost = (username) => {
     dispatch({
@@ -123,8 +123,8 @@ export const GlobalProvider = ({ children }) => {
   return (
     <GlobalContext.Provider
       value={{
-        roomCode: state.roomCode,
-        setRoomCode,
+        // roomCode: state.roomCode,
+        // setRoomCode,
         setHost,
         host: state.host,
         setGuest,

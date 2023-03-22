@@ -5,14 +5,13 @@ import { GlobalContext } from "../context/GlobalContext";
 
 const Home = (props) => {
   const {
-    setRoomCode,
     setHost,
     setIsHost,
     setGuest,
     clearContext
   } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
-  const [roomCodeInput, setRoomCodeInput] = useState("");
+  const [roomID, setRoomID] = useState("");
 
   useEffect(() => {
     clearContext();
@@ -23,11 +22,10 @@ const Home = (props) => {
   const handleJoinClick = () => {
     console.log("Joined");
     props.socket.emit(
-      "JOIN_ROOM", roomCodeInput, usernameInput, (response) => {
-        setRoomCode(roomCodeInput);
+      "JOIN_ROOM", roomID, usernameInput, (response) => {
         setGuest(usernameInput);
         setHost(response.room["host"]);
-        navigate(`/room/${roomCodeInput}/`);
+        navigate(`/room/${roomID}/`);
       }
     )
   }
@@ -36,11 +34,10 @@ const Home = (props) => {
      console.log("Hosted");
       props.socket.emit(
         "NEW_ROOM", usernameInput, (response) => {
-          const {roomCode} = response;
-          setRoomCode(roomCode);
+          const { roomID } = response;
           setHost(usernameInput);
           setIsHost(true);
-          navigate(`/room/${roomCode}/`);
+          navigate(`/room/${roomID}/`);
         }
       );
   }
@@ -54,14 +51,14 @@ const Home = (props) => {
         onChange={(e) => setUsernameInput(e.target.value)}
         value={usernameInput}
       /><br/>
-      <label htmlFor="roomCodeInput">room code</label><br/>
+      <label htmlFor="roomID">room code</label><br/>
       <input 
-        name="roomCodeInput" 
-        onChange={(e) => setRoomCodeInput(e.target.value)}
-        value={roomCodeInput}
+        name="roomID" 
+        onChange={(e) => setRoomID(e.target.value)}
+        value={roomID}
       /><br/>
       <button
-        disabled={roomCodeInput.length != 4 || usernameInput.length < 1}
+        disabled={roomID.length !== 4 || usernameInput.length < 1}
         onClick={() => handleJoinClick()}
       >
         Join

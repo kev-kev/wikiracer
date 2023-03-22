@@ -3,7 +3,6 @@ import { useContext, useEffect } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 import WikipediaContent from './WikipediaContent';
 
-
 const compareArticles = (str1, str2) => {
   return str1.toLowerCase().split("_").join(" ") === str2.toLowerCase().split("_").join(" "); 
 }
@@ -13,7 +12,6 @@ const Room = ({socket}) => {
     host,
     guest,
     startGame,
-    roomCode,
     isHost,
     gameInProgress,
     username,
@@ -27,7 +25,7 @@ const Room = ({socket}) => {
     clearContext
   } = useContext(GlobalContext);
   const navigate = useNavigate();
-  const { articleTitle } = useParams();
+  const { roomID, articleTitle } = useParams();
   
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, exit room.
@@ -37,7 +35,7 @@ const Room = ({socket}) => {
   }, []);
 
   useEffect(() => {
-    navigate(`/room/${roomCode}/${startArticle}/`);
+    navigate(`/room/${roomID}/${startArticle}/`);
   }, [startArticle]);
 
   useEffect(() => {
@@ -47,12 +45,12 @@ const Room = ({socket}) => {
   const handleStartGame = () => {
     console.log("Start game clicked");
     startGame();
-    socket.emit("GAME_START", roomCode);
+    socket.emit("GAME_START", roomID);
   };
 
   // TODO: Set idle timeout and trigger exit room if nothing happens (stretch)
   const handleExitRoom = () => {
-    socket.emit("USER_LEFT", roomCode);
+    socket.emit("USER_LEFT", roomID);
     clearContext();
     navigate("/");
   };
@@ -62,19 +60,19 @@ const Room = ({socket}) => {
   } 
 
   const handleWinGame = () => {
-    socket.emit("GAME_WIN", username, roomCode);
+    socket.emit("GAME_WIN", username, roomID);
     winGame(username);
   }
   
   const handleForfeitGame = () => {
-    socket.emit("GAME_FORFEIT", username, roomCode);
+    socket.emit("GAME_FORFEIT", username, roomID);
     forfeitGame(username);
   }
 
   return (
     <>
-      {!roomCode && <Navigate to="/" />}
-      <div>Room Code: {roomCode} </div>
+      {!roomID && <Navigate to="/" />}
+      <div>Room Code: {roomID} </div>
       <br />
       {winner && <h2>Winner: {winner}</h2>}
       <div>
