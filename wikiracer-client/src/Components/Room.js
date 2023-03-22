@@ -1,5 +1,5 @@
-import { useNavigate, Navigate, useParams, useLocation } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
+import { useNavigate, Navigate, useParams } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 import WikipediaContent from './WikipediaContent';
 
@@ -24,19 +24,15 @@ const Room = ({socket}) => {
     setEndArticle,
     clearContext
   } = useContext(GlobalContext);
+
+  const [startArticleInput, setStartArticleInput] = useState("");
+  const [endArticleInput, setEndArticleInput] = useState("");
+
   const navigate = useNavigate();
   const { roomID, articleTitle } = useParams();
   
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, redirect to /.
-  useEffect(() => {
-    setStartArticle("waluigi");
-    setEndArticle("wario");
-  }, []);
-
-  useEffect(() => {
-    navigate(`/room/${roomID}/${startArticle}/`);
-  }, [startArticle]);
 
   useEffect(() => {
     if(articleTitle && compareArticles(articleTitle, endArticle)) handleWinGame(username);
@@ -44,6 +40,7 @@ const Room = ({socket}) => {
 
   const handleStartGame = () => {
     console.log("Start game clicked");
+    navigate(`/room/${roomID}/${startArticle}/`);
     startGame();
     socket.emit("GAME_START", roomID);
   };
@@ -88,6 +85,31 @@ const Room = ({socket}) => {
     )
   }
 
+  const handleGameFormSubmit = (e) => {
+    e.preventDefault();
+    if(
+      startArticleInput.trim().split("_").join("").split(" ").join("").toLowerCase() ===
+      endArticleInput.trim().split("_").join("").split(" ").join("").toLowerCase()
+    ) {
+      alert('Start and end article must be different!')
+    } else {
+      setStartArticle(startArticleInput);
+      setEndArticle(endArticleInput);
+    }
+  }
+
+  const renderGameForm = () => {
+    return (
+      <form onSubmit={(e) => handleGameFormSubmit(e)}>
+        <label htmlFor='start-article'>Start Article</label> <br/>
+        <input type="text" name="start-article" onChange={(e) => setStartArticleInput(e.target.value)} value={startArticleInput} /> <br/>
+        <label htmlFor='end-article'>End Article</label> <br/>
+        <input type="text" name="end-article" onChange={(e) => setEndArticleInput(e.target.value)} value={endArticleInput} /> <br/>
+        <input type="submit"/>
+      </form>
+    )
+  }
+
   return (
     <>
       {!roomID && <Navigate to="/" />}
@@ -98,7 +120,8 @@ const Room = ({socket}) => {
         <div>Host: {host} {isHost ? "(You)" : ""}</div>
         <div>Guest: {guest} {isHost ? "" : "(You)"}</div>
         {isHost && renderGameControls()}
-        <WikipediaContent />
+        {isHost && renderGameForm()}
+        {gameInProgress && <WikipediaContent />}
       </div>
     </>
   );

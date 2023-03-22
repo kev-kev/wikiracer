@@ -50,6 +50,7 @@ const WikipediaContent = () => {
     setIsFetching(false);
   }
 
+  // TODO: Move winner and waiting screens to own component(s) 
   if (isFetching) {
     return (<div> Loading... </div>);
   } else if (!gameInProgress) {
