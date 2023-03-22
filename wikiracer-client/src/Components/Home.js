@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 
-const Home = (props) => {
+const Home = ({ socket }) => {
   const {
     setHost,
     setIsHost,
@@ -21,7 +21,7 @@ const Home = (props) => {
   
   const handleJoinClick = () => {
     console.log("Joined");
-    props.socket.emit(
+    socket.emit(
       "JOIN_ROOM", roomID, usernameInput, (response) => {
         setGuest(usernameInput);
         setHost(response.room["host"]);
@@ -31,15 +31,15 @@ const Home = (props) => {
   }
 
   const handleHostClick = () => {
-     console.log("Hosted");
-      props.socket.emit(
-        "NEW_ROOM", usernameInput, (response) => {
-          const { roomID } = response;
-          setHost(usernameInput);
-          setIsHost(true);
-          navigate(`/room/${roomID}/`);
-        }
-      );
+    console.log("Hosted");
+    socket.emit(
+      "NEW_ROOM", usernameInput, (response) => {
+        const { roomID } = response;
+        setHost(usernameInput);
+        setIsHost(true);
+        navigate(`/room/${roomID}/`);
+      }
+    );
   }
 
   return (

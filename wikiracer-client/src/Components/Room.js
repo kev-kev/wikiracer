@@ -7,7 +7,7 @@ const compareArticles = (str1, str2) => {
   return str1.toLowerCase().split("_").join(" ") === str2.toLowerCase().split("_").join(" "); 
 }
 
-const Room = ({socket}) => {
+const Room = ({ socket }) => {
   const {
     host,
     guest,
@@ -22,7 +22,7 @@ const Room = ({socket}) => {
     setStartArticle,
     endArticle,
     setEndArticle,
-    clearContext
+    clearContext,
   } = useContext(GlobalContext);
 
   const [startArticleInput, setStartArticleInput] = useState("");
@@ -33,6 +33,12 @@ const Room = ({socket}) => {
   
   // TODO: When component mounts, check that this room ID exists
   // in the server via socket event -- if it does not, redirect to /.
+
+  useEffect(() => {
+    socket.emit("ROOM_CHECK", roomID, (res) => {
+      if(!res.roomExists) navigate('/');
+    })
+  }, [])
 
   useEffect(() => {
     if(articleTitle && compareArticles(articleTitle, endArticle)) handleWinGame(username);
@@ -120,7 +126,7 @@ const Room = ({socket}) => {
         <div>Host: {host} {isHost ? "(You)" : ""}</div>
         <div>Guest: {guest} {isHost ? "" : "(You)"}</div>
         {isHost && renderGameControls()}
-        {isHost && renderGameForm()}
+        {(isHost && !gameInProgress) && renderGameForm()}
         {gameInProgress && <WikipediaContent />}
       </div>
     </>

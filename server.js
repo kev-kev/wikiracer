@@ -36,14 +36,14 @@ io.on("connection", (socket) => {
   socket.on("NEW_ROOM", (username, cb) => {
     const newRoomID = createNewRoom(username, socket);
     cb({
-      roomID: newRoomID,
+      roomID : newRoomID,
     });
   });
   socket.on("JOIN_ROOM", (roomID, username, cb) => {
     joinRoom(username, roomID, socket);
     cb({
       room: rooms[roomID],
-      roomID: roomID
+      roomID : roomID
     });
     socket.to(roomID).emit("USER_JOINED_ROOM", username);
   });
@@ -57,7 +57,12 @@ io.on("connection", (socket) => {
     socket.to(roomID).emit("USER_FORFEIT", username);
   });
   socket.on("USER_LEFT", (roomID) => {
-    handleRoomLeave(roomID, socket)
+    handleRoomLeave(roomID, socket);
+  });
+  socket.on("ROOM_CHECK", (roomID, cb) => {
+    cb({
+      roomExists: !!rooms[roomID]
+    });
   });
   socket.on("disconnecting", () => {
     for(const room of socket.rooms) {
@@ -71,8 +76,9 @@ io.on("connection", (socket) => {
 });
 
 const handleRoomLeave = (roomID, socket) => {
+  if(!rooms[roomID]) return;
   const isHost = () => {
-    if(rooms[roomID]["host"] === socket.username) return true
+    if(rooms[roomID]["host"] === socket.username) return true;
     else return false;
   }
   if(isHost()){
