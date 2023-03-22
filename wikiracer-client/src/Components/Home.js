@@ -20,9 +20,13 @@ const Home = ({ socket }) => {
   const navigate = useNavigate();
   
   const handleJoinClick = () => {
-    console.log("Joined");
+    console.log("Joining room");
     socket.emit(
       "JOIN_ROOM", roomID, usernameInput, (response) => {
+        if(response.invalidRoom) {
+          alert("invalid room code");
+          return;
+        }
         setGuest(usernameInput);
         setHost(response.room["host"]);
         navigate(`/room/${roomID}/`);

@@ -40,11 +40,17 @@ io.on("connection", (socket) => {
     });
   });
   socket.on("JOIN_ROOM", (roomID, username, cb) => {
-    joinRoom(username, roomID, socket);
-    cb({
-      room: rooms[roomID],
-      roomID : roomID
-    });
+    if(!rooms[roomID]){
+      cb({
+        invalidRoom: true,
+      })
+    } else {
+      joinRoom(username, roomID, socket);
+      cb({
+        room: rooms[roomID],
+        roomID : roomID
+      });
+    }
     socket.to(roomID).emit("USER_JOINED_ROOM", username);
   });
   socket.on("GAME_START", (roomID) => {
