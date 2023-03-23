@@ -111,7 +111,7 @@ const Room = ({ socket }) => {
     } else {
       setStartArticle(startArticleInput);
       setEndArticle(endArticleInput);
-      if(guest) socket.emit("SEND_ARTICLES", roomID, startArticle, endArticle);
+      if(guest) socket.emit("SEND_ARTICLES", roomID, startArticleInput, endArticleInput);
     }
   }
 
