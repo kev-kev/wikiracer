@@ -30,7 +30,9 @@ const SocketManager = ({ socket }) => {
     socket.on("USER_WIN", (username) => {
       // TODO: (stretch) score for the user who won
       winGame(username);
-      console.log(`game won by ${username}`)
+      console.log(`game won by ${username}`);
+      setStartArticle("");
+      setEndArticle("");
     });
     // other user forfeit
     socket.on("USER_FORFEIT", (username) => {

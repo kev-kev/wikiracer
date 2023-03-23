@@ -1,27 +1,31 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
 import parse, { domToReact }  from 'html-react-parser';
-import { useNavigate, useParams, Link, useNavigationType} from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 const classesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar'];
 const idsToHide = ['References', 'Notes'];
 
 const WikipediaContent = () => {
-  const { isFetching, setIsFetching, gameInProgress, winner, host } = useContext(GlobalContext);
+  const { isFetching, setIsFetching, gameInProgress, winner, host, startArticle } = useContext(GlobalContext);
   const [articleText, setArticleText] = useState("");
   let { roomID, articleTitle } = useParams();
   const navigate = useNavigate();
-  
-  useEffect(() => {
-    getArticle();
-  }, [articleTitle])
 
-  const getArticle = async () => {
-    if(!articleTitle) return;
+  useEffect(() => {
+    if(gameInProgress) navigate(`/room/${roomID}/${startArticle}/`);
+  }, [gameInProgress]);
+
+  useEffect(() => {
+    if(articleTitle) getArticle(articleTitle);
+  }, [articleTitle]);
+
+  const getArticle = async (articleName) => {
+    if(!articleName) return;
     setIsFetching();
-    const res = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${articleTitle}&origin=*`);
+    const res = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${articleName}&origin=*`);
     const data = await res.json();
-    const rawHTML = data.parse?.text['*'];
+    const rawHTML = await data.parse?.text['*'];
     const parsedData = parse(rawHTML?.toString(), {
       replace: domNode => {
         if(!domNode.attribs) return;

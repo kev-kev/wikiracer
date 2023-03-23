@@ -38,11 +38,7 @@ const Room = ({ socket }) => {
     socket.emit("ROOM_CHECK", roomID, (res) => {
       if(!res.roomExists) navigate('/');
     })
-  }, [])
-
-  useEffect(() => {
-    if(gameInProgress) navigate(`/room/${roomID}/${startArticle}/`);
-  }, [gameInProgress])
+  }, []);
 
   useEffect(() => {
     if(articleTitle && compareArticles(articleTitle, endArticle)) handleWinGame(username);
@@ -52,20 +48,19 @@ const Room = ({ socket }) => {
     if(guest && startArticle && endArticle) {
       socket.emit("SEND_ARTICLES", roomID, startArticle, endArticle);
     }
-  }, [guest])
+  }, [guest]);
 
   const handleStartGame = () => {
-    // navigate(`/room/${roomID}/${startArticle}/`);
     startGame();
     socket.emit("GAME_START", roomID);
-  };
+  }
 
   // TODO: Set idle timeout and trigger exit room if nothing happens (stretch)
   const handleExitRoom = () => {
     socket.emit("USER_LEFT", roomID);
     clearContext();
     navigate("/");
-  };
+  }
 
   const renderGameArea = () => {
     return gameInProgress ? "Game is in progress!" : "Waiting for host to start the game..."
@@ -97,7 +92,7 @@ const Room = ({ socket }) => {
         <h3>Start: {startArticle}</h3>
         <h3>End: {endArticle}</h3>
       </>
-    )
+    );
   }
 
   const handleGameFormSubmit = (e) => {
@@ -124,7 +119,7 @@ const Room = ({ socket }) => {
         <input type="text" name="end-article" onChange={(e) => setEndArticleInput(e.target.value)} value={endArticleInput} /> <br/>
         <input type="submit"/>
       </form>
-    )
+    );
   }
 
   return (
