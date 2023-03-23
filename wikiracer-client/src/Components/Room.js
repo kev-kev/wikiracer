@@ -41,12 +41,21 @@ const Room = ({ socket }) => {
   }, [])
 
   useEffect(() => {
+    if(gameInProgress) navigate(`/room/${roomID}/${startArticle}/`);
+  }, [gameInProgress])
+
+  useEffect(() => {
     if(articleTitle && compareArticles(articleTitle, endArticle)) handleWinGame(username);
   }, [articleTitle]);
 
+  useEffect(() => {
+    if(guest && startArticle && endArticle) {
+      socket.emit("SEND_ARTICLES", roomID, startArticle, endArticle);
+    }
+  }, [guest])
+
   const handleStartGame = () => {
-    console.log("Start game clicked");
-    navigate(`/room/${roomID}/${startArticle}/`);
+    // navigate(`/room/${roomID}/${startArticle}/`);
     startGame();
     socket.emit("GAME_START", roomID);
   };
@@ -94,13 +103,15 @@ const Room = ({ socket }) => {
   const handleGameFormSubmit = (e) => {
     e.preventDefault();
     if(
-      startArticleInput.trim().split("_").join("").split(" ").join("").toLowerCase() ===
-      endArticleInput.trim().split("_").join("").split(" ").join("").toLowerCase()
+      (startArticleInput.trim().split("_").join("").split(" ").join("").toLowerCase() ===
+      endArticleInput.trim().split("_").join("").split(" ").join("").toLowerCase()) ||
+      (!startArticleInput || !endArticleInput)
     ) {
-      alert('Start and end article must be different!')
+      alert('Invalid start / end article!')
     } else {
       setStartArticle(startArticleInput);
       setEndArticle(endArticleInput);
+      if(guest) socket.emit("SEND_ARTICLES", roomID, startArticle, endArticle);
     }
   }
 
@@ -125,7 +136,7 @@ const Room = ({ socket }) => {
       <div>
         <div>Host: {host} {isHost ? "(You)" : ""}</div>
         <div>Guest: {guest} {isHost ? "" : "(You)"}</div>
-        {isHost && renderGameControls()}
+        {renderGameControls()}
         {(isHost && !gameInProgress) && renderGameForm()}
         {gameInProgress && <WikipediaContent />}
       </div>

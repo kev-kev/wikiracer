@@ -62,7 +62,7 @@ const WikipediaContent = () => {
   } else {
     return (
       <div className="articleContainer">
-        <h2>{articleTitle}</h2>
+        <h2>{articleTitle?.split("_").join(" ")}</h2>
         {articleText}
       </div>
     );

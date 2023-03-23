@@ -37,7 +37,6 @@ export default (state, action) => {
       return {
         ...state,
         startArticle: action.payload,
-        curArticle: action.payload
       }
     case "SET_END_ARTICLE":
       return {

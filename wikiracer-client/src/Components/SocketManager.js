@@ -9,7 +9,9 @@ const SocketManager = ({ socket }) => {
     winGame,
     forfeitGame,
     clearContext,
-    clearGuest
+    clearGuest,
+    setStartArticle,
+    setEndArticle
   } = useContext(GlobalContext);
 
   // Events from the backend -> frontend,
@@ -38,18 +40,20 @@ const SocketManager = ({ socket }) => {
 
     // guest left room
     socket.on("GUEST_LEFT", () => {
-      alert("the guest left the room! wait for a new guest >:0");
       clearGuest();
     });
 
     socket.on("HOST_LEFT", () => {
-      console.log('firing alert')
-      alert("the host left the game :<");
       clearContext();
     });
     
     socket.on("INVALID_ROOM", () => {
       alert("no room exists with that code :(");
+    });
+
+    socket.on("SET_ARTICLES", (startArticle, endArticle) => {
+      setStartArticle(startArticle);
+      setEndArticle(endArticle);
     });
   }, []);
 
