@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { createElement, useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
 import parse, { domToReact }  from 'html-react-parser';
 import { useNavigate, useParams, Link } from 'react-router-dom';
@@ -41,6 +41,12 @@ const WikipediaContent = () => {
           }
         }
         if(domNode.name === 'a') {
+          if(!domNode.attribs.href?.match(/\/wiki\//) || domNode.attribs.href?.match(/[hH]elp/)) {
+            return <></>;
+          } else if(domNode.firstChild?.name === 'img') {
+            console.log('image in a link!');
+            return <>{domToReact([domNode.firstChild])}</>;
+          }
           const linkedArticleName = domNode.attribs.href?.split('/').at(-1);
           return (
             <Link to={`/room/${roomID}/${linkedArticleName}/`} className="replaced-link">
