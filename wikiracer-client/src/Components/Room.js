@@ -27,6 +27,7 @@ const Room = ({ socket }) => {
 
   const [startArticleInput, setStartArticleInput] = useState("");
   const [endArticleInput, setEndArticleInput] = useState("");
+  const [startSearchResults, setStartSearchResults] = useState([]);
 
   const navigate = useNavigate();
   const { roomID, articleTitle } = useParams();
@@ -102,7 +103,7 @@ const Room = ({ socket }) => {
       endArticleInput.trim().split("_").join("").split(" ").join("").toLowerCase()) ||
       (!startArticleInput || !endArticleInput)
     ) {
-      alert('Invalid start / end article!')
+      alert('Invalid start / end article!');
     } else {
       setStartArticle(startArticleInput);
       setEndArticle(endArticleInput);
@@ -110,11 +111,50 @@ const Room = ({ socket }) => {
     }
   }
 
+  const getSearchResults = async (searchTerm) => {
+    const res = await fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=${searchTerm}&origin=*`);
+    const data = await res.json();
+    return data;
+  }
+
+  const handleChangeArticleInput = async (type, value) => {
+    setStartArticleInput(value);
+    // send api request to search for input after delay
+    if(type === 'start'){
+      console.log('getting search results')
+      setTimeout(() => {
+        // data is a promise....
+        fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=${value}&origin=*`)
+          .then( res => res.json())
+          .then( data => setStartSearchResults(data));
+      }, 1000);
+    }
+  }
+
+  const renderSearchResults = (type) => {
+    console.log('start search results: ', startSearchResults)
+    if(!startSearchResults || startSearchResults.length === 0) return;
+    if(type === 'start') {
+      // create an option element for each result with the title as the value and the url stored as a param
+      const options = [];
+      for(let i = 0; i < startSearchResults[1]?.length; i++) {
+        console.log(startSearchResults[1][i], startSearchResults[3][i]);
+        options.push (
+          <option url={startSearchResults[3][i]}>{startSearchResults[1][i]}</option>
+        )
+      }
+      return options;
+    }
+  }
+
   const renderGameForm = () => {
     return (
       <form onSubmit={(e) => handleGameFormSubmit(e)}>
         <label htmlFor='start-article'>Start Article</label> <br/>
-        <input type="text" name="start-article" onChange={(e) => setStartArticleInput(e.target.value)} value={startArticleInput} /> <br/>
+        <input type="text" name="start-article" onChange={(e) => handleChangeArticleInput('start', e.target.value)} value={startArticleInput} /> <br/>
+        <select className='search-results'>
+          {renderSearchResults('start')}
+        </select> <br/>
         <label htmlFor='end-article'>End Article</label> <br/>
         <input type="text" name="end-article" onChange={(e) => setEndArticleInput(e.target.value)} value={endArticleInput} /> <br/>
         <input type="submit"/>

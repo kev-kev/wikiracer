@@ -3,8 +3,9 @@ import { GlobalContext } from '../context/GlobalContext';
 import parse, { domToReact }  from 'html-react-parser';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 
-const classesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar'];
-const idsToHide = ['References', 'Notes'];
+const classesToHide = ['reflist', 'reference', 'mw-editsection', 'navbar', 'navbox'];
+const idsToHide = ['References', 'Notes', 'External_links'];
+const altsToHide = ['Edit this at Wikidata', 'edit'];
 
 const WikipediaContent = () => {
   const { isFetching, setIsFetching, gameInProgress, winner, host, startArticle } = useContext(GlobalContext);
@@ -46,7 +47,7 @@ const WikipediaContent = () => {
           } else if(domNode.firstChild?.name === 'img') {
             console.log('image in a link!');
             return <>{domToReact([domNode.firstChild])}</>;
-          }
+          } else if (domNode.attribs.href.match(/File/)) return <></>;
           const linkedArticleName = domNode.attribs.href?.split('/').at(-1);
           return (
             <Link to={`/room/${roomID}/${linkedArticleName}/`} className="replaced-link">
@@ -54,6 +55,7 @@ const WikipediaContent = () => {
             </Link>
           );
         }
+        if(altsToHide.includes(domNode.attribs.alt)) return <></>;
       }
     });
     setArticleText(parsedData);
