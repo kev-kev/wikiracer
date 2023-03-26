@@ -26,6 +26,7 @@ const WikipediaContent = () => {
     setIsFetching();
     const res = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&format=json&page=${articleName}&origin=*`);
     const data = await res.json();
+    console.log(data);
     const rawHTML = await data.parse?.text['*'];
     const parsedData = parse(rawHTML?.toString(), {
       replace: domNode => {
