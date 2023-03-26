@@ -28,6 +28,7 @@ const Room = ({ socket }) => {
   const [startArticleInput, setStartArticleInput] = useState("");
   const [endArticleInput, setEndArticleInput] = useState("");
   const [startSearchResults, setStartSearchResults] = useState([]);
+  const [endSearchResults, setEndSearchResults] = useState([]);
 
   const navigate = useNavigate();
   const { roomID, articleTitle } = useParams();
@@ -112,28 +113,27 @@ const Room = ({ socket }) => {
   }
 
   const handleChangeArticleInput = async (type, value) => {
-    setStartArticleInput(value);
-    const waitFor = delay => new Promise(resolve => setTimeout(resolve, delay));
-    await waitFor(1000);
+    type === 'start' ? setStartArticleInput(value) : setEndArticleInput(value);
+    const searchTimeout = delay => new Promise(resolve => setTimeout(resolve, delay));
+    await searchTimeout(1000);
     const res = await fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=${value}&origin=*`);
     const data = await res.json();
-    setStartSearchResults(data[1]);
+    type === 'start' ? setStartSearchResults(data[1]) : setEndSearchResults(data[1]);
   }
 
   const renderSearchResults = (type) => {
-    console.log('start search results: ', startSearchResults)
-    if(!startSearchResults || startSearchResults.length === 0) return;
-    const options = [];
-    for(let i = 0; i < startSearchResults.length; i++) {
-      options.push (
-        <div onClick={() => setStartArticle(startSearchResults[i])}>{startSearchResults[i]}</div>
-      )
+    const arr = type === 'start' ? startSearchResults : endSearchResults;
+    const searchResults = [];
+    for(let i = 0; i < arr?.length; i++) {
+      searchResults.push (
+        <div onClick={() => type === 'start' ? setStartArticle(arr[i]) : setEndArticle(arr[i])}>{arr[i]}</div>
+      );
     }
-    return options;
+    return searchResults;
   }
 
-  const handleArticleSelect = (value) => {
-    setStartArticle(value);
+  const handleArticleSelect = (type, value) => {
+    type === 'start' ? setStartArticle(value) : setEndArticle(value);
   }
 
   const renderGameForm = () => {
@@ -141,11 +141,14 @@ const Room = ({ socket }) => {
       <form onSubmit={(e) => handleGameFormSubmit(e)}>
         <label htmlFor='start-article'>Start Article</label> <br/>
         <input type="text" name="start-article" onChange={(e) => handleChangeArticleInput('start', e.target.value)} value={startArticleInput} /> <br/>
-        <div className='search-results' onChange={(e) => handleArticleSelect(e.target.value)}>
+        <div className='search-results' onChange={(e) => handleArticleSelect('start', e.target.value)}>
           {renderSearchResults('start')}
         </div> <br/>
         <label htmlFor='end-article'>End Article</label> <br/>
-        <input type="text" name="end-article" onChange={(e) => setEndArticleInput(e.target.value)} value={endArticleInput} /> <br/>
+        <input type="text" name="end-article" onChange={(e) => handleChangeArticleInput('end', e.target.value)} value={endArticleInput} /> <br/>
+        <div className='search-results' onChange={(e) => handleArticleSelect('end', e.target.value)}>
+          {renderSearchResults('end')}
+        </div> <br/>
         <input type="submit"/>
       </form>
     );

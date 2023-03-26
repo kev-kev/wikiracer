@@ -15,7 +15,7 @@ const Home = ({ socket }) => {
 
   useEffect(() => {
     clearContext();
-  }, [])
+  }, []);
   
   const navigate = useNavigate();
   
@@ -31,7 +31,7 @@ const Home = ({ socket }) => {
         setHost(response.room["host"]);
         navigate(`/room/${roomID}/`);
       }
-    )
+    );
   }
 
   const handleHostClick = () => {
@@ -75,7 +75,7 @@ const Home = ({ socket }) => {
       </button>
       <br/>
     </div>
-  )
+  );
 }
 
 export default Home
