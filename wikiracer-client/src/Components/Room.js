@@ -47,10 +47,11 @@ const Room = ({ socket }) => {
   }, [articleTitle]);
 
   useEffect(() => {
-    if(guest && startArticle && endArticle) {
-      socket.emit("SEND_ARTICLES", roomID, startArticle, endArticle);
+    if(guest) {
+      startArticle && socket.emit("SEND_ARTICLE", roomID, startArticle, 'start');
+      endArticle && socket.emit("SEND_ARTICLE", roomID, endArticle, 'end');
     }
-  }, [guest]);
+  }, [guest, startArticle, endArticle]);
 
   const handleStartGame = () => {
     startGame();
@@ -97,21 +98,6 @@ const Room = ({ socket }) => {
     );
   }
 
-  const handleGameFormSubmit = (e) => {
-    e.preventDefault();
-    if(
-      (startArticleInput.trim().split("_").join("").split(" ").join("").toLowerCase() ===
-      endArticleInput.trim().split("_").join("").split(" ").join("").toLowerCase()) ||
-      (!startArticleInput || !endArticleInput)
-    ) {
-      alert('Invalid start / end article!');
-    } else {
-      setStartArticle(startArticle);
-      setEndArticle(endArticleInput);
-      if(guest) socket.emit("SEND_ARTICLES", roomID, startArticleInput, endArticleInput);
-    }
-  }
-
   const handleChangeArticleInput = async (type, value) => {
     type === 'start' ? setStartArticleInput(value) : setEndArticleInput(value);
     const searchTimeout = delay => new Promise(resolve => setTimeout(resolve, delay));
@@ -126,7 +112,7 @@ const Room = ({ socket }) => {
     const searchResults = [];
     for(let i = 0; i < arr?.length; i++) {
       searchResults.push (
-        <div onClick={() => type === 'start' ? setStartArticle(arr[i]) : setEndArticle(arr[i])}>{arr[i]}</div>
+        <div onClick={() => type === 'start' ? handleArticleSelect('start', arr[i]) : handleArticleSelect('end', arr[i])}>{arr[i]}</div>
       );
     }
     return searchResults;
@@ -138,19 +124,18 @@ const Room = ({ socket }) => {
 
   const renderGameForm = () => {
     return (
-      <form onSubmit={(e) => handleGameFormSubmit(e)}>
+      <>
         <label htmlFor='start-article'>Start Article</label> <br/>
         <input type="text" name="start-article" onChange={(e) => handleChangeArticleInput('start', e.target.value)} value={startArticleInput} /> <br/>
-        <div className='search-results' onChange={(e) => handleArticleSelect('start', e.target.value)}>
+        <div className='search-results'>
           {renderSearchResults('start')}
         </div> <br/>
         <label htmlFor='end-article'>End Article</label> <br/>
         <input type="text" name="end-article" onChange={(e) => handleChangeArticleInput('end', e.target.value)} value={endArticleInput} /> <br/>
-        <div className='search-results' onChange={(e) => handleArticleSelect('end', e.target.value)}>
+        <div className='search-results'>
           {renderSearchResults('end')}
         </div> <br/>
-        <input type="submit"/>
-      </form>
+      </>
     );
   }
 

@@ -53,9 +53,8 @@ const SocketManager = ({ socket }) => {
       alert("no room exists with that code :(");
     });
 
-    socket.on("SET_ARTICLES", (startArticle, endArticle) => {
-      setStartArticle(startArticle);
-      setEndArticle(endArticle);
+    socket.on("SET_ARTICLE", (article, type) => {
+      type === 'start' ? setStartArticle(article) : setEndArticle(article);
     });
   }, []);
 

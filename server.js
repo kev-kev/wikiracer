@@ -70,8 +70,8 @@ io.on("connection", (socket) => {
       roomExists: !!rooms[roomID]
     });
   });
-  socket.on("SEND_ARTICLES", (roomID, startArticle, endArticle) => {
-    socket.to(roomID).emit("SET_ARTICLES", startArticle, endArticle);
+  socket.on("SEND_ARTICLE", (roomID, article, type) => {
+    socket.to(roomID).emit("SET_ARTICLE", article, type);
   });
 
   socket.on("disconnecting", () => {
