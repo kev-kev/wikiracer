@@ -32,11 +32,11 @@ const joinRoom = (username, roomID, socket) => {
 }
 
 io.on("connection", (socket) => {
-  console.log("Client connected");
+  console.log(`Client ${socket.id} connected`);
   socket.on("NEW_ROOM", (username, cb) => {
     const newRoomID = createNewRoom(username, socket);
     cb({
-      roomID : newRoomID,
+      roomCode : newRoomID,
     });
   });
   socket.on("JOIN_ROOM", (roomID, username, cb) => {
@@ -48,7 +48,7 @@ io.on("connection", (socket) => {
       joinRoom(username, roomID, socket);
       cb({
         room: rooms[roomID],
-        roomID : roomID
+        roomCode : roomID
       });
     }
     socket.to(roomID).emit("USER_JOINED_ROOM", username);
@@ -73,15 +73,10 @@ io.on("connection", (socket) => {
   socket.on("SEND_ARTICLE", (roomID, article, type) => {
     socket.to(roomID).emit("SET_ARTICLE", article, type);
   });
-
-  socket.on("disconnecting", () => {
-    for(const room of socket.rooms) {
-      if (rooms[room]) {
-        console.log(socket.username, 'disconnected');
-        if(rooms[room]["host"] === socket.username) socket.to(room).emit("HOST_LEFT");
-        else socket.to(room).emit("GUEST_LEFT");
-      }
-    }
+  socket.on("DISCONNECT", () => {
+    console.log('disconnecting client', socket.username);
+    handleRoomLeave([...socket.rooms][1], socket);
+    socket.disconnect();
   });
 });
 
@@ -92,12 +87,13 @@ const handleRoomLeave = (roomID, socket) => {
     else return false;
   }
   if(isHost()){
-    console.log('deleting empty room', roomID);
+    console.log('host left, deleting room');
     delete rooms[roomID];
     socket.to(roomID).emit("HOST_LEFT");
     socket.leave(roomID);
   }
   else {
+    console.log('guest left the room');
     rooms[roomID]["guest"] = "";
     socket.to(roomID).emit("GUEST_LEFT");
     socket.leave(roomID);
