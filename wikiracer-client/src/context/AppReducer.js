@@ -53,6 +53,11 @@ export default (state, action) => {
         ...state,
         articleText: action.payload
       }
+    case "SET_ROOM_ID":
+      return {
+        ...state,
+        roomID: action.payload
+      }
     case "CLEAR_CONTEXT":
       return initialState;
     default:

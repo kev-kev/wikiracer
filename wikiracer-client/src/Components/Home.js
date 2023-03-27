@@ -13,13 +13,12 @@ const Home = ({ socket }) => {
   } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
   const [roomCode, setRoomCode] = useState("");
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     if(roomID) socket.emit("DISCONNECT");
     clearContext();
-  }, [roomID]);
-  
-  const navigate = useNavigate();
+  }, [roomID]);  
   
   const handleJoinClick = () => {
     socket.emit(

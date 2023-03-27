@@ -10,6 +10,7 @@ export const initialState = {
   startArticle: "",
   endArticle: "",
   isFetching: false,
+  roomID: "",
 };
 
 export const GlobalContext = createContext(initialState);
@@ -77,12 +78,12 @@ export const GlobalProvider = ({ children }) => {
     })
   }
   
-    const setStartArticle = (article) => {
-      dispatch({
-        type: "SET_START_ARTICLE",
-        payload: article
-      })
-    }
+  const setStartArticle = (article) => {
+    dispatch({
+      type: "SET_START_ARTICLE",
+      payload: article
+    })
+  }
 
   const setEndArticle = (article) => {
     dispatch({
@@ -95,6 +96,13 @@ export const GlobalProvider = ({ children }) => {
     dispatch({
       type: "SET_IS_FETCHING",
       payload: bool
+    })
+  }
+
+  const setRoomID = (id) => {
+    dispatch({
+      type: "SET_ROOM_ID",
+      payload: id
     })
   }
 
@@ -128,6 +136,8 @@ export const GlobalProvider = ({ children }) => {
         setEndArticle,
         isFetching: state.isFetching,
         setIsFetching,
+        roomID: state.roomID,
+        setRoomID,
       }}
     >
       {children}
