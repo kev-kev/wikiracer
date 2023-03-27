@@ -8,40 +8,40 @@ const Home = ({ socket }) => {
     setHost,
     setIsHost,
     setGuest,
-    clearContext
+    clearContext,
+    roomID
   } = useContext(GlobalContext);
   const [usernameInput, setUsernameInput] = useState("");
-  const [roomID, setRoomID] = useState("");
+  const [roomCode, setRoomCode] = useState("");
 
   useEffect(() => {
+    if(roomID) socket.emit("DISCONNECT");
     clearContext();
-  }, []);
+  }, [roomID]);
   
   const navigate = useNavigate();
   
   const handleJoinClick = () => {
-    console.log("Joining room");
     socket.emit(
-      "JOIN_ROOM", roomID, usernameInput, (response) => {
+      "JOIN_ROOM", roomCode, usernameInput, (response) => {
         if(response.invalidRoom) {
           alert("invalid room code");
           return;
         }
         setGuest(usernameInput);
         setHost(response.room["host"]);
-        navigate(`/room/${roomID}/`);
+        navigate(`/room/${roomCode}/`);
       }
     );
   }
 
   const handleHostClick = () => {
-    console.log("Hosted");
     socket.emit(
       "NEW_ROOM", usernameInput, (response) => {
-        const { roomID } = response;
+        const { roomCode } = response;
         setHost(usernameInput);
         setIsHost(true);
-        navigate(`/room/${roomID}/`);
+        navigate(`/room/${roomCode}/`);
       }
     );
   }
@@ -55,14 +55,14 @@ const Home = ({ socket }) => {
         onChange={(e) => setUsernameInput(e.target.value)}
         value={usernameInput}
       /><br/>
-      <label htmlFor="roomID">room code</label><br/>
+      <label htmlFor="roomCode">room code</label><br/>
       <input 
-        name="roomID" 
-        onChange={(e) => setRoomID(e.target.value)}
-        value={roomID}
+        name="roomCode" 
+        onChange={(e) => setRoomCode(e.target.value)}
+        value={roomCode}
       /><br/>
       <button
-        disabled={roomID.length !== 4 || usernameInput.length < 1}
+        disabled={roomCode.length !== 4 || usernameInput.length < 1}
         onClick={() => handleJoinClick()}
       >
         Join
