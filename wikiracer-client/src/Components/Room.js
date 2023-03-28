@@ -49,10 +49,6 @@ const Room = ({ socket }) => {
   }, [roomID]);
 
   useEffect(() => {
-    console.log(location);
-  }, [location])
-
-  useEffect(() => {
     if(articleTitle && compareArticles(articleTitle, endArticle)) handleWinGame(username);
   }, [articleTitle]);
 
@@ -121,6 +117,7 @@ const Room = ({ socket }) => {
     const arr = type === 'start' ? startSearchResults : endSearchResults;
     const searchResults = [];
     for(let i = 0; i < arr?.length; i++) {
+      if([startArticle, endArticle].includes(arr[i])) continue;
       searchResults.push (
         <div onClick={() => type === 'start' ? handleArticleSelect('start', arr[i]) : handleArticleSelect('end', arr[i])}>{arr[i]}</div>
       );
