@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #C5C2C6;
 }
 
 @import url('https://fonts.googleapis.com/css?family=Comic+Neue');
@@ -30,9 +31,23 @@ code {
   text-decoration: underline;
 }
 
+.home {
+  display: flex;
+  justify-content: center;
+  margin-top: 15%;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 20rem;
+
+}
+
 .home-grid {
   display: grid;
-  grid-template-rows: 1fr 1rem 1fr;
+  grid-template-rows: 1fr 5rem;
   width: 20rem;
 }
 
@@ -52,4 +67,33 @@ code {
 .title {
   margin: 0;
   grid-row: 2;
+}
+
+.home-btn-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 3rem;
+  height: 2rem;
+}
+
+.join-room-btn {
+  
+}
+
+.host-room-btn {
+  
+}
+
+.home-btn {
+  font-family: "Comic Neue";
+  width: 4rem;
+}
+
+.home-btn:hover {
+  box-shadow: -3px 2px 5px #808080;
+}
+
+.round-btn {
+  border-radius: 50%;
+  width: 8rem;
 }

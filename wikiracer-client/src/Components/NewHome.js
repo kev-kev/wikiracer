@@ -2,11 +2,18 @@ import React from 'react'
 
 const NewHome = () => {
   return (
-    <div>
-      <div className='home-grid'>
-        <h2 className='welcome'>Welcome to</h2>
-        <img className="logo" src="logo.png" alt="logo"/>
-        <h1 className='title'>WikiRacer</h1>
+    <div className="home">
+      <div className="home-container">
+        <div className='home-grid'>
+          <h2 className='welcome'>Welcome to</h2>
+          <img className="logo" src="logo.png" alt="logo"/>
+          <h1 className='title'>WikiRacer</h1>
+        </div>
+        <img className="car" src="car-vroom.png" alt="car going vroom"/>
+        <div className='home-btn-container'>
+          <button className="join-room-btn home-btn">JOIN</button>
+          <button className="host-room-btn home-btn">HOST</button>
+        </div>
       </div>
     </div>
   )
