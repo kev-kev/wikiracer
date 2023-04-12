@@ -7,6 +7,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@import url('https://fonts.googleapis.com/css?family=Comic+Neue');
+h2 {
+  font-family: 'Comic Neue';
+  font-size: 32px;
+}
+
+h1 {
+  font-family: 'Georgia';
+  font-weight: normal;
+  font-size: 64px;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -17,3 +29,4 @@ code {
   color: blue;
   text-decoration: underline;
 }
+

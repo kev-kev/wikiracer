@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './Components/Home';
+import NewHome from './Components/NewHome';
 import Room from "./Components/Room";
 import SocketManager from "./Components/SocketManager";
 import { GlobalContext, GlobalProvider } from "./context/GlobalContext";
@@ -19,7 +20,7 @@ const App = () => {
       <SocketManager socket={socket} />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home socket={socket} />} />
+          <Route path="/" element={<NewHome socket={socket} />} />
           <Route path="/room/:roomID/" element={<Room socket={socket} />} />
           <Route path="/room/:roomID/:articleTitle/" element={<Room socket={socket} />} />
           <Route
