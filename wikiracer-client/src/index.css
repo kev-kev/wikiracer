@@ -10,7 +10,7 @@ body {
 @import url('https://fonts.googleapis.com/css?family=Comic+Neue');
 h2 {
   font-family: 'Comic Neue';
-  font-size: 32px;
+  font-size: 36px;
 }
 
 h1 {
@@ -30,3 +30,26 @@ code {
   text-decoration: underline;
 }
 
+.home-grid {
+  display: grid;
+  grid-template-rows: 1fr 1rem 1fr;
+  width: 20rem;
+}
+
+.welcome {
+  align-self: end;
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+}
+/* TODO: logo isn't taking up space in row 2 */
+.logo {
+  grid-row: 1 / 2;
+  grid-column: 1;
+  justify-self: end;
+}
+
+.title {
+  margin: 0;
+  grid-row: 2;
+}
