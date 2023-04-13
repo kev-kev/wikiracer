@@ -87,3 +87,16 @@ code {
   border-radius: 50%;
   width: 8rem;
 }
+
+.homeNav-container {
+  display: flex;
+  align-items: center;
+}
+
+.homeNav-logo {
+  height: 6rem;
+}
+
+.homeNav-title {
+  font-size: 46px;
+}
