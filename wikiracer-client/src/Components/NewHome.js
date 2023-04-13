@@ -1,6 +1,17 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const NewHome = () => {
+const NewHome = ({ socket }) => {
+  const navigate = useNavigate();
+
+  const handleJoinBtnClick = () => {
+    navigate(`/join/`);
+  }
+  
+  const handleHostBtnClick = () => {
+    navigate(`/host/`);
+  }
+
   return (
     <div className="home">
       <div className="home-container">
@@ -11,12 +22,12 @@ const NewHome = () => {
           <h1 className='title'>WikiRacer</h1>
         <img className="car" src="car-vroom.png" alt="car going vroom"/>
         <div className='home-btn-container'>
-          <button className="join-room-btn home-btn">JOIN</button>
-          <button className="host-room-btn home-btn">HOST</button>
+          <button className="join-room-btn home-btn" onClick={handleJoinBtnClick}>JOIN</button>
+          <button className="host-room-btn home-btn" onClick={handleHostBtnClick}>HOST</button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default NewHome
