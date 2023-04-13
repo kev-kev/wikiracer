@@ -5,6 +5,19 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #C5C2C6;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Comic+Neue');
+h2 {
+  font-family: 'Comic Neue';
+  font-size: 36px;
+}
+
+h1 {
+  font-family: 'Georgia';
+  font-weight: normal;
+  font-size: 64px;
 }
 
 code {
@@ -16,4 +29,74 @@ code {
   cursor: pointer;
   color: blue;
   text-decoration: underline;
+}
+
+.home {
+  display: flex;
+  justify-content: center;
+  margin-top: 15%;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 20rem;
+}
+
+.welcome-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.welcome {
+  margin: 0;
+  align-self: end;
+}
+
+.title {
+  margin: 0;
+  text-align: center;
+}
+
+.home-btn-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 3rem;
+  height: 2rem;
+}
+
+.join-room-btn {
+  
+}
+
+.host-room-btn {
+  
+}
+
+.home-btn {
+  font-family: "Comic Neue";
+  width: 4rem;
+}
+
+.home-btn:hover {
+  box-shadow: -3px 2px 5px #808080;
+}
+
+.round-btn {
+  border-radius: 50%;
+  width: 8rem;
+}
+
+.homeNav-container {
+  display: flex;
+  align-items: center;
+}
+
+.homeNav-logo {
+  height: 6rem;
+}
+
+.homeNav-title {
+  font-size: 46px;
 }

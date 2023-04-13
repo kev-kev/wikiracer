@@ -1,4 +1,4 @@
-import { useNavigate, Navigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, Navigate, useParams } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from "../context/GlobalContext";
 import WikipediaContent from './WikipediaContent';
@@ -30,8 +30,8 @@ const Room = ({ socket }) => {
   const [endArticleInput, setEndArticleInput] = useState("");
   const [startSearchResults, setStartSearchResults] = useState([]);
   const [endSearchResults, setEndSearchResults] = useState([]);
+  const [shouldSearch, setShouldSearch] = useState(false);
 
-  const location = useLocation();
   const navigate = useNavigate();
   const { articleTitle, roomID } = useParams();
   
@@ -47,10 +47,6 @@ const Room = ({ socket }) => {
       if(!res.roomExists) navigate('/');
     });
   }, [roomID]);
-
-  useEffect(() => {
-    console.log(location);
-  }, [location])
 
   useEffect(() => {
     if(articleTitle && compareArticles(articleTitle, endArticle)) handleWinGame(username);
@@ -108,9 +104,10 @@ const Room = ({ socket }) => {
     );
   }
 
+  // TODO: change timeout so it's cancellable, then cancel it on every call of handleChangearticleInput
   const handleChangeArticleInput = async (type, value) => {
-    type === 'start' ? setStartArticleInput(value) : setEndArticleInput(value);
     const searchTimeout = delay => new Promise(resolve => setTimeout(resolve, delay));
+    type === 'start' ? setStartArticleInput(value) : setEndArticleInput(value);
     await searchTimeout(1000);
     const res = await fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=${value}&origin=*`);
     const data = await res.json();
@@ -121,6 +118,7 @@ const Room = ({ socket }) => {
     const arr = type === 'start' ? startSearchResults : endSearchResults;
     const searchResults = [];
     for(let i = 0; i < arr?.length; i++) {
+      if([startArticle, endArticle].includes(arr[i])) continue;
       searchResults.push (
         <div onClick={() => type === 'start' ? handleArticleSelect('start', arr[i]) : handleArticleSelect('end', arr[i])}>{arr[i]}</div>
       );
@@ -137,12 +135,12 @@ const Room = ({ socket }) => {
       <>
         <label htmlFor='start-article'>Start Article</label> <br/>
         <input type="text" name="start-article" onChange={(e) => handleChangeArticleInput('start', e.target.value)} value={startArticleInput} /> <br/>
-        <div className='search-results'>
+        <div className='search-results start-search-results'>
           {renderSearchResults('start')}
         </div> <br/>
         <label htmlFor='end-article'>End Article</label> <br/>
         <input type="text" name="end-article" onChange={(e) => handleChangeArticleInput('end', e.target.value)} value={endArticleInput} /> <br/>
-        <div className='search-results'>
+        <div className='search-results end-search-results'>
           {renderSearchResults('end')}
         </div> <br/>
       </>
