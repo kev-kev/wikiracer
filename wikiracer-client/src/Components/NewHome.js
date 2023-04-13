@@ -29,8 +29,8 @@ const NewHome = ({ socket }) => {
           <h1 className='title'>WikiRacer</h1>
         <img className="car" src="/car-vroom.png" alt="car going vroom"/>
         <div className='home-btn-container'>
-          <button className="join-room-btn home-btn" onClick={handleJoinBtnClick}>JOIN</button>
-          <button className="host-room-btn home-btn" onClick={handleHostBtnClick}>HOST</button>
+          <button className="home-btn" onClick={handleJoinBtnClick}>JOIN</button>
+          <button className="home-btn" onClick={handleHostBtnClick}>HOST</button>
         </div>
       </div>
     </div>

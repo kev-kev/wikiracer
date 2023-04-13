@@ -29,25 +29,35 @@ const JoinRoom = ({ socket }) => {
   return (
     <>
       <HomeNav />
-      <div>
-        <label for="usernameInput">Username</label>
-        <input 
-          name="usernameInput" 
-          onChange={(e) => setUsernameInput(e.target.value)}
-          value={usernameInput}
-        />
-        <label for="roomCodeInput">Room Code</label>
-        <input 
-          name="roomCodeInput" 
-          onChange={(e) => setRoomCodeInput(e.target.value)}
-          value={roomCodeInput}
-        />
-        <button
-          disabled={roomCodeInput.length !== 4 || usernameInput.trim().length < 1}
-          onClick={() => handleJoinClick()}
-        >
-          Join
-        </button>
+      <div className="join-container">
+        <img className="join-img" src="/join-room.png" alt="Join a Room!" />
+        <div className="join-form">
+          <div className='input-container'>
+            <label htmlFor="usernameInput">Username</label>
+            <input 
+              className='form-input'
+              name="usernameInput" 
+              onChange={(e) => setUsernameInput(e.target.value)}
+              value={usernameInput}
+            />
+          </div>
+          <div className='input-container'>
+            <label htmlFor="roomCodeInput">Room Code</label>
+            <input 
+              className='form-input'
+              name="roomCodeInput" 
+              onChange={(e) => setRoomCodeInput(e.target.value)}
+              value={roomCodeInput}
+            />
+          </div>
+          <div
+            className='join-room-btn round-btn'
+            disabled={roomCodeInput.length !== 4 || usernameInput.trim().length < 1}
+            onClick={() => handleJoinClick()}
+          >
+            <span>JOIN ROOM</span>
+          </div>
+        </div>
       </div>
     </>
   )
