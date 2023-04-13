@@ -10,37 +10,46 @@ const JoinRoom = ({ socket }) => {
   } = useContext(GlobalContext);
   const navigate = useNavigate();
   const [usernameInput, setUsernameInput] = useState("");
-  const [roomCode, setRoomCode] = useState("");
+  const [roomCodeInput, setRoomCodeInput] = useState("");
 
   const handleJoinClick = () => {
     socket.emit(
-      "JOIN_ROOM", roomCode, usernameInput, (response) => {
+      "JOIN_ROOM", roomCodeInput, usernameInput, (response) => {
         if(response.invalidRoom) {
           alert("invalid room code");
           return;
         }
         setGuest(usernameInput);
         setHost(response.room["host"]);
-        navigate(`/room/${roomCode}/`);
+        navigate(`/room/${roomCodeInput}/`);
       }
     );
   }
   
   return (
-    <div>
+    <>
       <HomeNav />
-      <input 
-        name="usernameInput" 
-        onChange={(e) => setUsernameInput(e.target.value)}
-        value={usernameInput}
-      />
-      <button
-        disabled={roomCode.length !== 4 || usernameInput.length < 1}
-        onClick={() => handleJoinClick()}
-      >
-        Join
-      </button>
-    </div>
+      <div>
+        <label for="usernameInput">Username</label>
+        <input 
+          name="usernameInput" 
+          onChange={(e) => setUsernameInput(e.target.value)}
+          value={usernameInput}
+        />
+        <label for="roomCodeInput">Room Code</label>
+        <input 
+          name="roomCodeInput" 
+          onChange={(e) => setRoomCodeInput(e.target.value)}
+          value={roomCodeInput}
+        />
+        <button
+          disabled={roomCodeInput.length !== 4 || usernameInput.trim().length < 1}
+          onClick={() => handleJoinClick()}
+        >
+          Join
+        </button>
+      </div>
+    </>
   )
 }
 
