@@ -42,31 +42,21 @@ code {
   flex-direction: column;
   justify-content: center;
   width: 20rem;
-
 }
 
-.home-grid {
-  display: grid;
-  grid-template-rows: 1fr 5rem;
-  width: 20rem;
+.welcome-container {
+  display: flex;
+  justify-content: space-between;
 }
 
 .welcome {
-  align-self: end;
-  grid-column: 1;
-  grid-row: 1;
   margin: 0;
-}
-/* TODO: logo isn't taking up space in row 2 */
-.logo {
-  grid-row: 1 / 2;
-  grid-column: 1;
-  justify-self: end;
+  align-self: end;
 }
 
 .title {
   margin: 0;
-  grid-row: 2;
+  text-align: center;
 }
 
 .home-btn-container {
