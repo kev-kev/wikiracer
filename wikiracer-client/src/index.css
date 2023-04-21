@@ -1,8 +1,6 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: Comic Neue;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #C5C2C6;
@@ -10,7 +8,6 @@ body {
 
 @import url('https://fonts.googleapis.com/css?family=Comic+Neue');
 h2 {
-  font-family: 'Comic Neue';
   font-size: 36px;
 }
 
@@ -20,17 +17,7 @@ h1 {
   font-size: 64px;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-.replaced-link {
-  cursor: pointer;
-  color: blue;
-  text-decoration: underline;
-}
-
+/* home */
 .home {
   display: flex;
   justify-content: center;
@@ -66,27 +53,17 @@ code {
   height: 2rem;
 }
 
-.join-room-btn {
-  
-}
-
-.host-room-btn {
-  
-}
-
 .home-btn {
   font-family: "Comic Neue";
   width: 4rem;
 }
 
-.home-btn:hover {
+.home-btn:hover, .join-room-btn:hover {
   box-shadow: -3px 2px 5px #808080;
 }
 
-.round-btn {
-  border-radius: 50%;
-  width: 8rem;
-}
+
+/* HomeNav */
 
 .homeNav-container {
   display: flex;
@@ -99,4 +76,67 @@ code {
 
 .homeNav-title {
   font-size: 46px;
+}
+
+/* Forms */
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-input {
+  height: 1.3rem;
+}
+
+.round-btn {
+  border-radius: 48%;
+  width: 8rem;
+  height: 3rem;
+}
+
+/* Join */
+
+.join-img {
+  width: 40%;
+}
+
+.join-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.join-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 20%;
+  align-items: center;
+
+  margin: 2rem;
+  font-size: 1.3rem;
+}
+
+.join-room-btn {
+  background-color: #009dff;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* border: 1px solid black; */
+  /* z-index: 2; */
+}
+
+
+
+/* WikipediaContent */
+
+.replaced-link {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
 }
