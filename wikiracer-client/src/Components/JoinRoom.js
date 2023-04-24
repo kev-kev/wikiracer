@@ -29,9 +29,9 @@ const JoinRoom = ({ socket }) => {
   return (
     <>
       <HomeNav />
-      <div className="join-container">
-        <img className="join-img" src="/join-room.png" alt="Join a Room!" />
-        <div className="join-form">
+      <div className="form-container">
+        <img className="join-room-img header-img" src="/join-room.png" alt="Join a Room!" />
+        <div className="form">
           <div className='input-container'>
             <label htmlFor="usernameInput">Username</label>
             <input 

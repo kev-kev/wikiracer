@@ -36,7 +36,7 @@ const Home = ({ socket }) => {
 
   const handleHostClick = () => {
     socket.emit(
-      "NEW_ROOM", usernameInput, (response) => {
+      "CREATE_ROOM", usernameInput, (response) => {
         const { roomCode } = response;
         setHost(usernameInput);
         setIsHost(true);

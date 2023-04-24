@@ -33,7 +33,7 @@ const joinRoom = (username, roomID, socket) => {
 
 io.on("connection", (socket) => {
   console.log(`Client ${socket.id} connected`);
-  socket.on("NEW_ROOM", (username, cb) => {
+  socket.on("CREATE_ROOM", (username, cb) => {
     const newRoomID = createNewRoom(username, socket);
     cb({
       roomCode : newRoomID,
