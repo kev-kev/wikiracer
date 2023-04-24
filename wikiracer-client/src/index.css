@@ -7,6 +7,7 @@ body {
 }
 
 @import url('https://fonts.googleapis.com/css?family=Comic+Neue');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
 h2 {
   font-size: 36px;
 }
@@ -74,6 +75,10 @@ h1 {
   height: 6rem;
 }
 
+.homeNav-logo:hover {
+  cursor: pointer;
+}
+
 .homeNav-title {
   font-size: 46px;
 }
@@ -88,7 +93,7 @@ h1 {
 }
 
 .form-input {
-  height: 1.3rem;
+  height: 1.5rem;
 }
 
 .round-btn {
@@ -109,6 +114,7 @@ h1 {
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  margin-top: 5%;
 }
 
 .join-form {
@@ -117,9 +123,28 @@ h1 {
   gap: 2rem;
   width: 20%;
   align-items: center;
-
   margin: 2rem;
   font-size: 1.3rem;
+}
+
+.form-input {
+  font-family: 'Roboto Mono';
+}
+
+.username-input {
+  width: 12rem;
+  font-size: 1.2rem;
+}
+
+.room-code-input {
+  text-align: center;
+  font-size: 1.5rem;
+  width: 6rem;
+  caret-color: transparent;
+}
+
+.room-code-input-container {
+  display: flex;
 }
 
 .join-room-btn {
@@ -128,12 +153,6 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* border: 1px solid black; */
-  /* z-index: 2; */
-}
-
-.room-code-input {
-  display: flex;
 }
 
 /* WikipediaContent */
