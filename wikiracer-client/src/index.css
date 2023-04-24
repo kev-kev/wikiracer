@@ -19,7 +19,7 @@ h1 {
 }
 
 
-/* home */
+/* Home */
 
 .home {
   display: flex;
@@ -85,7 +85,16 @@ h1 {
   font-size: 46px;
 }
 
+
 /* Forms */
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5%;
+}
 
 .input-container {
   display: flex;
@@ -108,21 +117,6 @@ h1 {
   justify-content: center;
 }
 
-
-/* Join Room */
-
-.header-img {
-  width: 45%;
-}
-
-.form-container {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 5%;
-}
-
 .form {
   display: flex;
   flex-direction: column;
@@ -141,6 +135,13 @@ h1 {
   width: 12rem;
   font-size: 1.2rem;
 }
+
+.header-img {
+  width: 45%;
+}
+
+
+/* Join Room */
 
 .room-code-input {
   text-align: center;
